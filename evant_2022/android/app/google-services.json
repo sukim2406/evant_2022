@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1019447833203",
+    "project_id": "evant2022-b5801",
+    "storage_bucket": "evant2022-b5801.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1019447833203:android:3048bdcc105ff1536d7006",
+        "android_client_info": {
+          "package_name": "com.example.evant_2022"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1019447833203-7pc3dpleua852elqad17urffn2ae4mun.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHOAFBpLOBBZuUi653PNtX9LgRepURnaU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1019447833203-7pc3dpleua852elqad17urffn2ae4mun.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
