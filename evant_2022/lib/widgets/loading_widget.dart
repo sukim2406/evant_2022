@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../controllers/global_controller.dart' as global;
+
 class LoadingWidget extends StatefulWidget {
   const LoadingWidget({Key? key}) : super(key: key);
 
@@ -29,12 +31,12 @@ class _LoadingWidgetState extends State<LoadingWidget>
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width * .8,
-            child: ProgressIndicatorTheme(
+            child: const ProgressIndicatorTheme(
               data: ProgressIndicatorThemeData(
-                color: Colors.green.shade400,
+                color: global.primaryColor,
                 linearTrackColor: Colors.grey,
               ),
-              child: const LinearProgressIndicator(),
+              child: LinearProgressIndicator(),
             ),
           ),
         ],

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'firebase_options.dart';
 
 import './controllers/auth_controller.dart';
+import './controllers/user_controller.dart';
 
 import './widgets/loading_widget.dart';
 
@@ -12,11 +13,16 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  ).then((value) {
-    Get.put(
-      AuthController(),
-    );
-  });
+  ).then(
+    (value) {
+      Get.put(
+        AuthController(),
+      );
+      Get.put(
+        UserController(),
+      );
+    },
+  );
   runApp(const MyApp());
 }
 
