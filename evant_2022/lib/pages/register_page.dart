@@ -24,6 +24,10 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController password2Controller = TextEditingController();
   TextEditingController screenNameController = TextEditingController();
+  FocusNode emailFocus = FocusNode();
+  FocusNode passwordFocus = FocusNode();
+  FocusNode password2Focus = FocusNode();
+  FocusNode screenNameFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +37,20 @@ class _RegisterPageState extends State<RegisterPage> {
         passwordController: passwordController,
         password2Controller: password2Controller,
         screenNameController: screenNameController,
+        emailFocus: emailFocus,
+        passwordFocus: passwordFocus,
+        password2Focus: password2Focus,
+        screenNameFocus: screenNameFocus,
       ),
       tabeltVer: _RegisterTabletPage(
         emailController: emailController,
         passwordController: passwordController,
         password2Controller: password2Controller,
         screenNameController: screenNameController,
+        emailFocus: emailFocus,
+        passwordFocus: passwordFocus,
+        password2Focus: password2Focus,
+        screenNameFocus: screenNameFocus,
       ),
     );
   }
@@ -51,12 +63,21 @@ class _RegisterMobilePage extends StatefulWidget {
   final TextEditingController passwordController;
   final TextEditingController password2Controller;
   final TextEditingController screenNameController;
+  final FocusNode emailFocus;
+  final FocusNode passwordFocus;
+  final FocusNode password2Focus;
+  final FocusNode screenNameFocus;
+
   const _RegisterMobilePage({
     Key? key,
     required this.emailController,
     required this.passwordController,
     required this.password2Controller,
     required this.screenNameController,
+    required this.emailFocus,
+    required this.passwordFocus,
+    required this.password2Focus,
+    required this.screenNameFocus,
   }) : super(key: key);
 
   @override
@@ -100,6 +121,8 @@ class __RegisterMobilePageState extends State<_RegisterMobilePage> {
               width: MediaQuery.of(context).size.width * .6,
               controller: widget.emailController,
               obsecure: false,
+              focusNode: widget.emailFocus,
+              autoFocus: true,
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * .025,
@@ -109,6 +132,7 @@ class __RegisterMobilePageState extends State<_RegisterMobilePage> {
               width: MediaQuery.of(context).size.width * .6,
               controller: widget.passwordController,
               obsecure: true,
+              focusNode: widget.passwordFocus,
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * .025,
@@ -118,6 +142,7 @@ class __RegisterMobilePageState extends State<_RegisterMobilePage> {
               width: MediaQuery.of(context).size.width * .6,
               controller: widget.password2Controller,
               obsecure: true,
+              focusNode: widget.password2Focus,
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * .025,
@@ -127,6 +152,7 @@ class __RegisterMobilePageState extends State<_RegisterMobilePage> {
               width: MediaQuery.of(context).size.width * .6,
               controller: widget.screenNameController,
               obsecure: false,
+              focusNode: widget.screenNameFocus,
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * .025,
@@ -240,12 +266,21 @@ class _RegisterTabletPage extends StatefulWidget {
   final TextEditingController passwordController;
   final TextEditingController password2Controller;
   final TextEditingController screenNameController;
+
+  final FocusNode emailFocus;
+  final FocusNode passwordFocus;
+  final FocusNode password2Focus;
+  final FocusNode screenNameFocus;
   const _RegisterTabletPage({
     Key? key,
     required this.emailController,
     required this.passwordController,
     required this.password2Controller,
     required this.screenNameController,
+    required this.emailFocus,
+    required this.passwordFocus,
+    required this.password2Focus,
+    required this.screenNameFocus,
   }) : super(key: key);
 
   @override
@@ -299,6 +334,8 @@ class __RegisterTabletPageState extends State<_RegisterTabletPage> {
                     width: MediaQuery.of(context).size.width * .5,
                     controller: widget.emailController,
                     obsecure: false,
+                    focusNode: widget.emailFocus,
+                    autoFocus: true,
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * .025,
@@ -308,6 +345,7 @@ class __RegisterTabletPageState extends State<_RegisterTabletPage> {
                     width: MediaQuery.of(context).size.width * .5,
                     controller: widget.passwordController,
                     obsecure: true,
+                    focusNode: widget.passwordFocus,
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * .025,
@@ -317,6 +355,7 @@ class __RegisterTabletPageState extends State<_RegisterTabletPage> {
                     width: MediaQuery.of(context).size.width * .5,
                     controller: widget.password2Controller,
                     obsecure: true,
+                    focusNode: widget.password2Focus,
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * .025,
@@ -326,6 +365,7 @@ class __RegisterTabletPageState extends State<_RegisterTabletPage> {
                     width: MediaQuery.of(context).size.width * .5,
                     controller: widget.screenNameController,
                     obsecure: false,
+                    focusNode: widget.screenNameFocus,
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * .025,

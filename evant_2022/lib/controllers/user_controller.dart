@@ -29,4 +29,18 @@ class UserController extends GetxController {
       return false;
     }
   }
+
+  getCurUser(uid) async {
+    try {
+      return await firestore
+          .collection('users')
+          .doc(uid)
+          .get()
+          .then((DocumentSnapshot ds) {
+        return ds.data();
+      });
+    } catch (e) {
+      print('getCurUser error');
+    }
+  }
 }

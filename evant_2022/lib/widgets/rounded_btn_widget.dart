@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../controllers/global_controller.dart' as global;
-
 class RoundedBtnWidget extends StatelessWidget {
   final double? height;
   final double? width;

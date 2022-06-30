@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../controllers/user_controller.dart';
+import '../controllers/sf_controller.dart';
 
 import '../pages/login_page.dart';
 import '../pages/landing_page.dart';
@@ -39,14 +40,31 @@ class AuthController extends GetxController {
     try {
       if (email.isEmail) {
         if (password.isNotEmpty) {
-          await auth
-              .signInWithEmailAndPassword(
-            email: email,
-            password: password,
-          )
-              .then((result) {
-            return true;
-          });
+          auth
+              .signInWithEmailAndPassword(email: email, password: password)
+              .then(
+            (user) {
+              print('login user = $user');
+              return true;
+            },
+          ).catchError(
+            (error) {
+              print(error.toString());
+              Get.snackbar(
+                error.toString(),
+                error.toString(),
+                backgroundColor: Colors.redAccent,
+                snackPosition: SnackPosition.BOTTOM,
+                titleText: const Text(
+                  'Account login failed',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              );
+              return false;
+            },
+          );
         } else {
           throw Exception('Check password input');
         }
@@ -122,7 +140,9 @@ class AuthController extends GetxController {
   }
 
   void logout() async {
-    await auth.signOut();
+    await auth.signOut().then((result) {
+      SFControllers.instance.clearSF();
+    });
   }
 
   register(String email, password, password2, screenName) async {
@@ -140,6 +160,7 @@ class AuthController extends GetxController {
                     'uid': result.user!.uid,
                     'email': email,
                     'screenName': screenName,
+                    'homeground': [37.532600, 127.024612],
                     'greetMsg': 'Welcome to Evant!',
                     'following': [],
                     'stats': {
@@ -185,5 +206,10 @@ class AuthController extends GetxController {
       );
       return false;
     }
+  }
+
+  getCurUid() {
+    var user = auth.currentUser;
+    return user?.uid;
   }
 }
