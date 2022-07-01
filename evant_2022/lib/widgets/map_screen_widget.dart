@@ -6,35 +6,66 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../controllers/global_controller.dart' as global;
 
+import '../widgets/loading_widget.dart';
+
+import 'dart:async';
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../controllers/global_controller.dart' as global;
+
 class MapScreenWidget extends StatefulWidget {
-  const MapScreenWidget({Key? key}) : super(key: key);
+  final double initLat;
+  final double initLng;
+  const MapScreenWidget({
+    Key? key,
+    required this.initLat,
+    required this.initLng,
+  }) : super(key: key);
 
   @override
   State<MapScreenWidget> createState() => _MapScreenWidgetState();
 }
 
 class _MapScreenWidgetState extends State<MapScreenWidget> {
-  static const _initCameraPosiion =
-      CameraPosition(target: LatLng(37.532600, 127.024612), zoom: 11.5);
+  late CameraPosition _initCameraPosition;
+  late Set<Marker> tempMarkerSet;
+  late Set<Marker> markerSet;
 
   Completer<GoogleMapController> _controller = Completer();
-
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
-
   Random rnd = Random();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _initCameraPosition = CameraPosition(
+      target: LatLng(
+        widget.initLat,
+        widget.initLng,
+      ),
+      zoom: 15,
+    );
+  }
 
   void _add(LatLng point) {
     var markerIdVal = rnd.nextInt(1000).toString();
-    final MarkerId markerId = MarkerId(markerIdVal);
+    final MarkerId markerId = MarkerId('tempMarker');
     final Marker marker = Marker(
-      markerId: markerId,
-      position: point,
-      infoWindow: InfoWindow(
-        title: markerIdVal,
-        snippet: 'test',
-      ),
-      onTap: () {},
-    );
+        markerId: markerId,
+        position: point,
+        infoWindow: InfoWindow(
+          title: markerIdVal,
+          snippet: 'click here to cancel',
+        ),
+        onTap: () {
+          setState(() {
+            markers.remove(markerId);
+          });
+        });
 
     setState(() {
       markers[markerId] = marker;
@@ -45,13 +76,13 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: GoogleMap(
-        initialCameraPosition: _initCameraPosiion,
+        initialCameraPosition: _initCameraPosition,
         zoomControlsEnabled: false,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
         markers: Set<Marker>.of(markers.values),
-        onTap: _handleTap,
+        onTap: _add,
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: global.primaryColor,
@@ -64,7 +95,7 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
   Future<void> _goToCenter() async {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(
-      CameraUpdate.newCameraPosition(_initCameraPosiion),
+      CameraUpdate.newCameraPosition(_initCameraPosition),
     );
   }
 

@@ -13,12 +13,8 @@ class SFControllers extends GetxController {
   Future setCurUser(uid) async {
     SharedPreferences sf = await getSharedPreferences();
 
-    await sf.setString('uid', uid).then(
-      (result) {
-        print('setCurUser $result');
-        return result;
-      },
-    );
+    bool result = await sf.setString('uid', uid);
+    return result;
   }
 
   Future getCurUser() async {

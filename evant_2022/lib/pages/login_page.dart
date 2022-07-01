@@ -10,7 +10,6 @@ import '../widgets/loading_widget.dart';
 import '../controllers/global_controller.dart' as global;
 import '../controllers/auth_controller.dart';
 import '../controllers/sf_controller.dart';
-import '../controllers/user_controller.dart';
 
 import '../pages/register_page.dart';
 
@@ -26,6 +25,16 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
   FocusNode emailFocus = FocusNode();
   FocusNode passwordFocus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    SFControllers.instance.getCurUser().then(
+      (result) {
+        print('login page initstate getCurUser result $result');
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,23 +133,28 @@ class __LoginMobilePageState extends State<_LoginMobilePage> {
                 height: null,
                 width: MediaQuery.of(context).size.width * .6,
                 func: () {
-                  AuthController.instance
-                      .login(
-                    widget.emailController.text,
-                    widget.passwordController.text,
-                  )
-                      .then(
-                    (result) {
-                      if (result == null) {
-                        Navigator.pop(context);
-                      }
-                    },
-                  );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const LoadingWidget(),
                     ),
+                  );
+                  AuthController.instance
+                      .login(widget.emailController.text,
+                          widget.passwordController.text)
+                      .then(
+                    (result) {
+                      if (!result) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const LoginPage(),
+                          ),
+                          (route) => false,
+                        );
+                      }
+                    },
                   );
                 },
                 label: 'LOG IN',
@@ -285,7 +299,7 @@ class __LoginTabletPageState extends State<_LoginTabletPage> {
                   BoxedTextFieldWidget(
                     autoFocus: true,
                     hintText: 'Email',
-                    width: MediaQuery.of(context).size.width * .6,
+                    width: MediaQuery.of(context).size.width * .5,
                     obsecure: false,
                     focusNode: widget.emailFocus,
                     controller: widget.emailController,
@@ -295,7 +309,7 @@ class __LoginTabletPageState extends State<_LoginTabletPage> {
                   ),
                   BoxedTextFieldWidget(
                     hintText: 'Password',
-                    width: MediaQuery.of(context).size.width * .6,
+                    width: MediaQuery.of(context).size.width * .5,
                     controller: widget.passwordController,
                     obsecure: true,
                     focusNode: widget.passwordFocus,
@@ -307,15 +321,26 @@ class __LoginTabletPageState extends State<_LoginTabletPage> {
                     height: null,
                     width: MediaQuery.of(context).size.width * .4,
                     func: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoadingWidget(),
+                        ),
+                      );
                       AuthController.instance
-                          .login(
-                        widget.emailController.text,
-                        widget.passwordController.text,
-                      )
+                          .login(widget.emailController.text,
+                              widget.passwordController.text)
                           .then(
                         (result) {
                           if (!result) {
-                            Navigator.pop(context);
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const LoginPage(),
+                              ),
+                              (route) => false,
+                            );
                           }
                         },
                       );

@@ -161,6 +161,12 @@ class __RegisterMobilePageState extends State<_RegisterMobilePage> {
               height: null,
               width: MediaQuery.of(context).size.width * .6,
               func: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoadingWidget(),
+                  ),
+                );
                 AuthController.instance
                     .register(
                   widget.emailController.text,
@@ -171,15 +177,16 @@ class __RegisterMobilePageState extends State<_RegisterMobilePage> {
                     .then(
                   (result) {
                     if (!result) {
-                      Navigator.pop(context);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const RegisterPage(),
+                        ),
+                        (route) => false,
+                      );
                     }
                   },
-                );
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoadingWidget(),
-                  ),
                 );
               },
               label: 'REGISTER',
@@ -374,6 +381,12 @@ class __RegisterTabletPageState extends State<_RegisterTabletPage> {
                     height: null,
                     width: MediaQuery.of(context).size.width * .4,
                     func: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoadingWidget(),
+                        ),
+                      );
                       AuthController.instance
                           .register(
                         widget.emailController.text,
@@ -384,15 +397,16 @@ class __RegisterTabletPageState extends State<_RegisterTabletPage> {
                           .then(
                         (result) {
                           if (!result) {
-                            Navigator.pop(context);
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const RegisterPage(),
+                              ),
+                              (route) => false,
+                            );
                           }
                         },
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoadingWidget(),
-                        ),
                       );
                     },
                     label: 'REGISTER',

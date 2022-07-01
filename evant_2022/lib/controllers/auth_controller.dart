@@ -40,31 +40,30 @@ class AuthController extends GetxController {
     try {
       if (email.isEmail) {
         if (password.isNotEmpty) {
-          auth
-              .signInWithEmailAndPassword(email: email, password: password)
-              .then(
-            (user) {
-              print('login user = $user');
+          try {
+            UserCredential credential = await auth.signInWithEmailAndPassword(
+                email: email, password: password);
+            await SFControllers.instance
+                .setCurUser(credential.user!.uid)
+                .then((result) {
               return true;
-            },
-          ).catchError(
-            (error) {
-              print(error.toString());
-              Get.snackbar(
-                error.toString(),
-                error.toString(),
-                backgroundColor: Colors.redAccent,
-                snackPosition: SnackPosition.BOTTOM,
-                titleText: const Text(
-                  'Account login failed',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+            });
+            return true;
+          } on FirebaseAuthException catch (e) {
+            Get.snackbar(
+              'login error',
+              e.toString(),
+              backgroundColor: Colors.redAccent,
+              snackPosition: SnackPosition.BOTTOM,
+              titleText: const Text(
+                'Account login failed',
+                style: TextStyle(
+                  color: Colors.white,
                 ),
-              );
-              return false;
-            },
-          );
+              ),
+            );
+            return false;
+          }
         } else {
           throw Exception('Check password input');
         }
@@ -105,6 +104,10 @@ class AuthController extends GetxController {
           'screenName': result.user?.email,
           'greetMsg': 'Welcome to Evant!',
           'following': [],
+          'homeground': {
+            'lat': 37.532600,
+            'lng': 127.024612,
+          },
           'stats': {
             'hosted': 0,
             'attended': 0,
@@ -113,13 +116,16 @@ class AuthController extends GetxController {
         };
         UserController.instance.createUserDoc(userDocData).then(
           (result) {
-            if (result == null) {
+            if (result) {
               return true;
             }
 
             throw Exception('createUserDoc error');
           },
         );
+        SFControllers.instance.setCurUser(result.user!.uid).then((result) {
+          return result;
+        });
       });
     } catch (e) {
       print(e.toString());
@@ -155,7 +161,7 @@ class AuthController extends GetxController {
                   .createUserWithEmailAndPassword(
                       email: email, password: password)
                   .then(
-                (result) {
+                (result) async {
                   var userDocData = {
                     'uid': result.user!.uid,
                     'email': email,
@@ -169,7 +175,7 @@ class AuthController extends GetxController {
                       'likes': 0,
                     },
                   };
-                  UserController.instance.createUserDoc(userDocData).then(
+                  await UserController.instance.createUserDoc(userDocData).then(
                     (result) {
                       if (result) {
                         return true;
@@ -177,8 +183,14 @@ class AuthController extends GetxController {
                       throw Exception('createUserDoc error');
                     },
                   );
+                  await SFControllers.instance
+                      .setCurUser(result.user!.uid)
+                      .then((result) {
+                    return result;
+                  });
                 },
               );
+              return true;
             } else {
               throw Exception('Screen name cannot be empty');
             }
