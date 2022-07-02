@@ -4,9 +4,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../controllers/global_controller.dart' as global;
+import '../../controllers/global_controller.dart' as global;
 
-import '../widgets/loading_widget.dart';
+import '../loading_widget.dart';
 
 import 'dart:async';
 import 'dart:math';
@@ -14,7 +14,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../controllers/global_controller.dart' as global;
+import '../../controllers/global_controller.dart' as global;
 
 class MapScreenWidget extends StatefulWidget {
   final double initLat;
