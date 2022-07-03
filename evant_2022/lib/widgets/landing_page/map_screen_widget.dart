@@ -51,6 +51,12 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
     );
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   void _add(LatLng point) {
     var markerIdVal = rnd.nextInt(1000).toString();
     final MarkerId markerId = MarkerId('tempMarker');

@@ -48,6 +48,9 @@ class _LandingPageState extends State<LandingPage> {
       mobileVer: _LandingMobilePage(
         userData: userData,
       ),
+      tabeltVer: LandingTabletPage(
+        userData: userData,
+      ),
     );
   }
 }
@@ -77,6 +80,12 @@ class __LandingMobilePageState extends State<_LandingMobilePage> {
       initLat = widget.userData['homeground']['lat'];
       initLng = widget.userData['homeground']['lng'];
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -122,6 +131,93 @@ class __LandingMobilePageState extends State<_LandingMobilePage> {
                   ],
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// -------------------------- TABLET --------------------------------//
+
+class LandingTabletPage extends StatefulWidget {
+  final Map userData;
+  const LandingTabletPage({
+    Key? key,
+    required this.userData,
+  }) : super(key: key);
+
+  @override
+  State<LandingTabletPage> createState() => _LandingTabletPageState();
+}
+
+class _LandingTabletPageState extends State<LandingTabletPage> {
+  double initLat = global.initMapLat;
+  double initLng = global.initMapLng;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      initLat = widget.userData['homeground']['lat'];
+      initLng = widget.userData['homeground']['lng'];
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        color: Colors.white,
+        child: Column(
+          children: [
+            const AppBarWidget(),
+            Row(
+              children: [
+                Column(
+                  children: [
+                    const WelcomeMessageWidget(),
+                    Container(
+                      width: MediaQuery.of(context).size.width * .7,
+                      height: MediaQuery.of(context).size.height * .45,
+                      color: Colors.grey,
+                      child: MapScreenWidget(
+                        initLat: initLat,
+                        initLng: initLng,
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * .7,
+                      height: MediaQuery.of(context).size.height * .25,
+                      color: Colors.grey.shade400,
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * .3,
+                      height: MediaQuery.of(context).size.height * .25,
+                      color: Colors.grey.shade200,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * .3,
+                      height: MediaQuery.of(context).size.height * .6,
+                      color: Colors.black,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),

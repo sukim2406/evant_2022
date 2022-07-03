@@ -5,6 +5,7 @@ import '../responsive_layout_widget.dart';
 import 'popup_menu_widget.dart';
 
 import '../../controllers/global_controller.dart' as global;
+import '../../controllers/auth_controller.dart';
 
 class AppBarWidget extends StatefulWidget {
   const AppBarWidget({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
   Widget build(BuildContext context) {
     return const ResponsiveLayoutWidget(
       mobileVer: AppBarMobileWidget(),
+      tabeltVer: AppBarTabletWidget(),
     );
   }
 }
@@ -60,6 +62,73 @@ class _AppBarMobileWidgetState extends State<AppBarMobileWidget> {
           PopupMenuWidget(),
           SizedBox(
             width: MediaQuery.of(context).size.width * .05,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ----------------------------  TABLET ----------------------- //
+
+class AppBarTabletWidget extends StatefulWidget {
+  const AppBarTabletWidget({Key? key}) : super(key: key);
+
+  @override
+  State<AppBarTabletWidget> createState() => _AppBarTabletWidgetState();
+}
+
+class _AppBarTabletWidgetState extends State<AppBarTabletWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * .15,
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .1,
+            width: MediaQuery.of(context).size.width * .3,
+            child: FittedBox(
+              child: Text(
+                'Evant',
+                style: GoogleFonts.yellowtail(
+                  textStyle: const TextStyle(
+                    color: global.primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                onPressed: () {
+                  print('profile');
+                },
+                child: Text(
+                  'Profile',
+                  style: GoogleFonts.yellowtail(
+                    color: global.secondaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  AuthController.instance.logout();
+                },
+                child: Text(
+                  'Log out',
+                  style: GoogleFonts.yellowtail(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
