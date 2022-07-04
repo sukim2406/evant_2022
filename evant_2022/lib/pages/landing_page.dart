@@ -8,6 +8,7 @@ import '../widgets/landing_page/welcome_message_widget.dart';
 import '../widgets/landing_page/search_category_widget.dart';
 import '../widgets/landing_page/search_following_widget.dart';
 import '../widgets/landing_page/footer_widget.dart';
+import '../widgets/landing_page/my_events_widget.dart';
 
 import '../controllers/global_controller.dart' as global;
 import '../controllers/sf_controller.dart';
@@ -123,6 +124,10 @@ class __LandingMobilePageState extends State<_LandingMobilePage> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .05,
                     ),
+                    const MyEventsWidget(),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .05,
+                    ),
                     const SearchFollowingWidget(),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .1,
@@ -187,38 +192,26 @@ class _LandingTabletPageState extends State<LandingTabletPage> {
                 Column(
                   children: [
                     const WelcomeMessageWidget(),
-                    Container(
-                      width: MediaQuery.of(context).size.width * .7,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * .65,
                       height: MediaQuery.of(context).size.height * .45,
-                      color: Colors.grey,
                       child: MapScreenWidget(
                         initLat: initLat,
                         initLng: initLng,
                       ),
                     ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * .7,
-                      height: MediaQuery.of(context).size.height * .25,
-                      color: Colors.grey.shade400,
-                    ),
+                    const SearchCategoryWidget(),
                   ],
                 ),
                 Column(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * .3,
-                      height: MediaQuery.of(context).size.height * .25,
-                      color: Colors.grey.shade200,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * .3,
-                      height: MediaQuery.of(context).size.height * .6,
-                      color: Colors.black,
-                    ),
+                  children: const [
+                    MyEventsWidget(),
+                    SearchFollowingWidget(),
                   ],
                 ),
               ],
             ),
+            const FooterWidget(),
           ],
         ),
       ),

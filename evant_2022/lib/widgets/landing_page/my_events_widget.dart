@@ -5,35 +5,57 @@ import '../../controllers/global_controller.dart' as global;
 
 import '../../widgets/responsive_layout_widget.dart';
 
-class SearchFollowingWidget extends StatefulWidget {
-  const SearchFollowingWidget({Key? key}) : super(key: key);
+class MyEventsWidget extends StatefulWidget {
+  const MyEventsWidget({Key? key}) : super(key: key);
 
   @override
-  State<SearchFollowingWidget> createState() => _SearchFollowingWidgetState();
+  State<MyEventsWidget> createState() => _MyEventsWidgetState();
 }
 
-class _SearchFollowingWidgetState extends State<SearchFollowingWidget> {
+class _MyEventsWidgetState extends State<MyEventsWidget> {
+  late ScrollController scrollController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    scrollController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const ResponsiveLayoutWidget(
-      mobileVer: SearchFollowingMobileWidget(),
-      tabeltVer: SearchFollowingTabletWidget(),
+    return ResponsiveLayoutWidget(
+      mobileVer: MyEventsMobileWidget(
+        controller: scrollController,
+      ),
+      tabeltVer: MyEventsTabletWidget(
+        controller: scrollController,
+      ),
     );
   }
 }
 
-// -------------------------- MOBILE ---------------------- //
+// -------------------------- MOBILE ------------------------ //
 
-class SearchFollowingMobileWidget extends StatefulWidget {
-  const SearchFollowingMobileWidget({Key? key}) : super(key: key);
+class MyEventsMobileWidget extends StatefulWidget {
+  final ScrollController controller;
+  const MyEventsMobileWidget({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
 
   @override
-  State<SearchFollowingMobileWidget> createState() =>
-      _SearchFollowingMobileWidgetState();
+  State<MyEventsMobileWidget> createState() => _MyEventsMobileWidgetState();
 }
 
-class _SearchFollowingMobileWidgetState
-    extends State<SearchFollowingMobileWidget> {
+class _MyEventsMobileWidgetState extends State<MyEventsMobileWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -43,17 +65,15 @@ class _SearchFollowingMobileWidgetState
           width: MediaQuery.of(context).size.width * .9,
           child: FittedBox(
             alignment: Alignment.centerLeft,
-            child: Text(
-              'Following',
-              style: GoogleFonts.yellowtail(
-                color: global.secondaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            child: Text('My Events',
+                style: GoogleFonts.yellowtail(
+                  color: global.secondaryColor,
+                  fontWeight: FontWeight.bold,
+                )),
           ),
         ),
         Container(
-          height: MediaQuery.of(context).size.height * .5,
+          height: MediaQuery.of(context).size.height * .3,
           width: MediaQuery.of(context).size.width * .9,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(
@@ -62,6 +82,7 @@ class _SearchFollowingMobileWidgetState
             color: Color.fromRGBO(82, 82, 82, .5),
           ),
           child: ListView.separated(
+            controller: widget.controller,
             padding: const EdgeInsets.all(8),
             itemCount: global.tempFollowing.length,
             itemBuilder: (BuildContext context, int index) {
@@ -81,18 +102,20 @@ class _SearchFollowingMobileWidgetState
   }
 }
 
-// --------------------------------- TABLET ------------------------------- //
+// ---------------------------- TABLET -------------------------------//
 
-class SearchFollowingTabletWidget extends StatefulWidget {
-  const SearchFollowingTabletWidget({Key? key}) : super(key: key);
+class MyEventsTabletWidget extends StatefulWidget {
+  final ScrollController controller;
+  const MyEventsTabletWidget({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
 
   @override
-  State<SearchFollowingTabletWidget> createState() =>
-      _SearchFollowingTabletWidgetState();
+  State<MyEventsTabletWidget> createState() => _MyEventsTabletWidgetState();
 }
 
-class _SearchFollowingTabletWidgetState
-    extends State<SearchFollowingTabletWidget> {
+class _MyEventsTabletWidgetState extends State<MyEventsTabletWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -102,17 +125,15 @@ class _SearchFollowingTabletWidgetState
           width: MediaQuery.of(context).size.width * .3,
           child: FittedBox(
             alignment: Alignment.centerLeft,
-            child: Text(
-              'Following',
-              style: GoogleFonts.yellowtail(
-                color: global.secondaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            child: Text('My Events',
+                style: GoogleFonts.yellowtail(
+                  color: global.secondaryColor,
+                  fontWeight: FontWeight.bold,
+                )),
           ),
         ),
         Container(
-          height: MediaQuery.of(context).size.height * .55,
+          height: MediaQuery.of(context).size.height * .2,
           width: MediaQuery.of(context).size.width * .3,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(
@@ -121,6 +142,7 @@ class _SearchFollowingTabletWidgetState
             color: Color.fromRGBO(82, 82, 82, .5),
           ),
           child: ListView.separated(
+            controller: widget.controller,
             padding: const EdgeInsets.all(8),
             itemCount: global.tempFollowing.length,
             itemBuilder: (BuildContext context, int index) {

@@ -13,10 +13,31 @@ class SearchCategoryWidget extends StatefulWidget {
 }
 
 class _SearchCategoryWidgetState extends State<SearchCategoryWidget> {
+  late ScrollController scrollController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    scrollController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const ResponsiveLayoutWidget(
-      mobileVer: SearchCategoryMobileWidget(),
+    return ResponsiveLayoutWidget(
+      mobileVer: SearchCategoryMobileWidget(
+        controller: scrollController,
+      ),
+      tabeltVer: SearchCategoryTabletWidget(
+        controller: scrollController,
+      ),
     );
   }
 }
@@ -24,8 +45,10 @@ class _SearchCategoryWidgetState extends State<SearchCategoryWidget> {
 // --------------------------- MOBILE ------------------------ //
 
 class SearchCategoryMobileWidget extends StatefulWidget {
+  final ScrollController controller;
   const SearchCategoryMobileWidget({
     Key? key,
+    required this.controller,
   }) : super(key: key);
 
   @override
@@ -57,6 +80,7 @@ class _SearchCategoryMobileWidgetState
           height: MediaQuery.of(context).size.height * .3,
           width: MediaQuery.of(context).size.width * .9,
           child: ListView.separated(
+            controller: widget.controller,
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.all(8),
             itemCount: global.categories.length,
@@ -83,6 +107,102 @@ class _SearchCategoryMobileWidgetState
                       Center(
                         child: Container(
                           width: MediaQuery.of(context).size.width * .4,
+                          height: MediaQuery.of(context).size.height * .1,
+                          color: const Color.fromRGBO(82, 82, 82, .5),
+                          child: Center(
+                            child: Text(
+                              global.categories[index]['category'],
+                              style: GoogleFonts.yellowtail(
+                                fontSize: 40,
+                                color: global.primaryColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) =>
+                const VerticalDivider(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// -------------------------- TABLET ------------------------- //
+
+class SearchCategoryTabletWidget extends StatefulWidget {
+  final ScrollController controller;
+  const SearchCategoryTabletWidget({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  @override
+  State<SearchCategoryTabletWidget> createState() =>
+      _SearchCategoryTabletWidgetState();
+}
+
+class _SearchCategoryTabletWidgetState
+    extends State<SearchCategoryTabletWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: MediaQuery.of(context).size.height * .05,
+          width: MediaQuery.of(context).size.width * .6,
+          child: FittedBox(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Search By Category',
+              style: GoogleFonts.yellowtail(
+                color: global.secondaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * .2,
+          width: MediaQuery.of(context).size.width * .65,
+          child: ListView.separated(
+            controller: widget.controller,
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.all(8),
+            itemCount: global.categories.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                width: MediaQuery.of(context).size.width * .2,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(
+                      20,
+                    ),
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Image(
+                          width: MediaQuery.of(context).size.width * .2,
+                          height: MediaQuery.of(context).size.width * .2,
+                          image: AssetImage(
+                            global.categories[index]['img'],
+                          ),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Center(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * .2,
                           height: MediaQuery.of(context).size.height * .1,
                           color: const Color.fromRGBO(82, 82, 82, .5),
                           child: Center(

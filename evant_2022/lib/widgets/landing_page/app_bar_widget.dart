@@ -19,7 +19,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
   Widget build(BuildContext context) {
     return const ResponsiveLayoutWidget(
       mobileVer: AppBarMobileWidget(),
-      tabeltVer: AppBarTabletWidget(),
+      // tabeltVer: AppBarTabletWidget(),
     );
   }
 }
