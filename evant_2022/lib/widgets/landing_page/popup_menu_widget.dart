@@ -6,7 +6,11 @@ import '../../controllers/global_controller.dart' as global;
 import '../../controllers/auth_controller.dart';
 
 class PopupMenuWidget extends StatefulWidget {
-  const PopupMenuWidget({Key? key}) : super(key: key);
+  final String profileUrl;
+  const PopupMenuWidget({
+    Key? key,
+    required this.profileUrl,
+  }) : super(key: key);
 
   @override
   State<PopupMenuWidget> createState() => _PopupMenuWidgetState();
@@ -15,8 +19,10 @@ class PopupMenuWidget extends StatefulWidget {
 class _PopupMenuWidgetState extends State<PopupMenuWidget> {
   @override
   Widget build(BuildContext context) {
-    return const ResponsiveLayoutWidget(
-      mobileVer: PopupMenuMobileWidget(),
+    return ResponsiveLayoutWidget(
+      mobileVer: PopupMenuMobileWidget(
+        profileUrl: widget.profileUrl,
+      ),
     );
   }
 }
@@ -24,7 +30,11 @@ class _PopupMenuWidgetState extends State<PopupMenuWidget> {
 // ------------------------ MOBILE -------------------------- //
 
 class PopupMenuMobileWidget extends StatefulWidget {
-  const PopupMenuMobileWidget({Key? key}) : super(key: key);
+  final String profileUrl;
+  const PopupMenuMobileWidget({
+    Key? key,
+    required this.profileUrl,
+  }) : super(key: key);
 
   @override
   State<PopupMenuMobileWidget> createState() => _PopupMenuMobileWidgetState();
@@ -59,6 +69,10 @@ class _PopupMenuMobileWidgetState extends State<PopupMenuMobileWidget> {
         icon: CircleAvatar(
           radius: MediaQuery.of(context).size.height * .04,
           backgroundColor: global.primaryColor,
+          backgroundImage: Image.network(
+            widget.profileUrl,
+            fit: BoxFit.contain,
+          ).image,
         ),
         iconSize: MediaQuery.of(context).size.height * .1,
       ),

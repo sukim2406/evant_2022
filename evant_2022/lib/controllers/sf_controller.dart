@@ -1,8 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
 
-class SFControllers extends GetxController {
-  static SFControllers instance = Get.find();
+class SFController extends GetxController {
+  static SFController instance = Get.find();
 
   Future getSharedPreferences() async {
     SharedPreferences sf = await SharedPreferences.getInstance();

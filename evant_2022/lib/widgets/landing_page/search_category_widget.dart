@@ -17,14 +17,12 @@ class _SearchCategoryWidgetState extends State<SearchCategoryWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     scrollController = ScrollController();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     scrollController.dispose();
   }

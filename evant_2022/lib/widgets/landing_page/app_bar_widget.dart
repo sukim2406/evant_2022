@@ -8,7 +8,11 @@ import '../../controllers/global_controller.dart' as global;
 import '../../controllers/auth_controller.dart';
 
 class AppBarWidget extends StatefulWidget {
-  const AppBarWidget({Key? key}) : super(key: key);
+  final String profileUrl;
+  const AppBarWidget({
+    Key? key,
+    required this.profileUrl,
+  }) : super(key: key);
 
   @override
   State<AppBarWidget> createState() => _AppBarWidgetState();
@@ -17,8 +21,10 @@ class AppBarWidget extends StatefulWidget {
 class _AppBarWidgetState extends State<AppBarWidget> {
   @override
   Widget build(BuildContext context) {
-    return const ResponsiveLayoutWidget(
-      mobileVer: AppBarMobileWidget(),
+    return ResponsiveLayoutWidget(
+      mobileVer: AppBarMobileWidget(
+        profileUrl: widget.profileUrl,
+      ),
       // tabeltVer: AppBarTabletWidget(),
     );
   }
@@ -27,7 +33,11 @@ class _AppBarWidgetState extends State<AppBarWidget> {
 // --------------------------- MOBILE -------------------------- //
 
 class AppBarMobileWidget extends StatefulWidget {
-  const AppBarMobileWidget({Key? key}) : super(key: key);
+  final String profileUrl;
+  const AppBarMobileWidget({
+    Key? key,
+    required this.profileUrl,
+  }) : super(key: key);
 
   @override
   State<AppBarMobileWidget> createState() => _AppBarMobileWidgetState();
@@ -59,7 +69,9 @@ class _AppBarMobileWidgetState extends State<AppBarMobileWidget> {
           Expanded(
             child: Container(),
           ),
-          PopupMenuWidget(),
+          PopupMenuWidget(
+            profileUrl: widget.profileUrl,
+          ),
           SizedBox(
             width: MediaQuery.of(context).size.width * .05,
           ),
@@ -72,7 +84,11 @@ class _AppBarMobileWidgetState extends State<AppBarMobileWidget> {
 // ----------------------------  TABLET ----------------------- //
 
 class AppBarTabletWidget extends StatefulWidget {
-  const AppBarTabletWidget({Key? key}) : super(key: key);
+  final String profileUrl;
+  const AppBarTabletWidget({
+    Key? key,
+    required this.profileUrl,
+  }) : super(key: key);
 
   @override
   State<AppBarTabletWidget> createState() => _AppBarTabletWidgetState();

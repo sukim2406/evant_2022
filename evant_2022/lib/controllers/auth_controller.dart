@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../controllers/user_controller.dart';
 import '../controllers/sf_controller.dart';
+import '../controllers/storage_controller.dart';
 
 import '../pages/login_page.dart';
 import '../pages/landing_page.dart';
@@ -43,7 +44,7 @@ class AuthController extends GetxController {
           try {
             UserCredential credential = await auth.signInWithEmailAndPassword(
                 email: email, password: password);
-            await SFControllers.instance
+            await SFController.instance
                 .setCurUser(credential.user!.uid)
                 .then((result) {
               return true;
@@ -123,7 +124,7 @@ class AuthController extends GetxController {
             throw Exception('createUserDoc error');
           },
         );
-        SFControllers.instance.setCurUser(result.user!.uid).then((result) {
+        SFController.instance.setCurUser(result.user!.uid).then((result) {
           return result;
         });
       });
@@ -147,11 +148,12 @@ class AuthController extends GetxController {
 
   void logout() async {
     await auth.signOut().then((result) {
-      SFControllers.instance.clearSF();
+      SFController.instance.clearSF();
     });
   }
 
   register(String email, password, password2, screenName) async {
+    bool success = false;
     try {
       if (email.isEmail) {
         if (password.isNotEmpty && password2.isNotEmpty) {
@@ -162,11 +164,22 @@ class AuthController extends GetxController {
                       email: email, password: password)
                   .then(
                 (result) async {
+                  await SFController.instance
+                      .setCurUser(result.user!.uid)
+                      .then((result) {
+                    success = result;
+                  });
+
                   var userDocData = {
                     'uid': result.user!.uid,
                     'email': email,
                     'screenName': screenName,
-                    'homeground': [37.532600, 127.024612],
+                    'profilePicture': await StorageController.instance
+                        .getTempProfilePicture(),
+                    'homeground': {
+                      'lat': 37.532600,
+                      'lng': 127.024612,
+                    },
                     'greetMsg': 'Welcome to Evant!',
                     'following': [],
                     'stats': {
@@ -178,19 +191,15 @@ class AuthController extends GetxController {
                   await UserController.instance.createUserDoc(userDocData).then(
                     (result) {
                       if (result) {
+                        success = true;
                         return true;
                       }
                       throw Exception('createUserDoc error');
                     },
                   );
-                  await SFControllers.instance
-                      .setCurUser(result.user!.uid)
-                      .then((result) {
-                    return result;
-                  });
                 },
               );
-              return true;
+              return success;
             } else {
               throw Exception('Screen name cannot be empty');
             }

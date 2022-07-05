@@ -6,16 +6,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../controllers/global_controller.dart' as global;
 
-import '../loading_widget.dart';
-
-import 'dart:async';
-import 'dart:math';
-
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import '../../controllers/global_controller.dart' as global;
-
 class MapScreenWidget extends StatefulWidget {
   final double initLat;
   final double initLng;
@@ -40,7 +30,6 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initCameraPosition = CameraPosition(
       target: LatLng(
@@ -53,7 +42,6 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 

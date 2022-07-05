@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    SFControllers.instance.getCurUser().then(
+    SFController.instance.getCurUser().then(
       (result) {
         print('login page initstate getCurUser result $result');
       },

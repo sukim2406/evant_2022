@@ -134,7 +134,7 @@ class _MyEventsTabletWidgetState extends State<MyEventsTabletWidget> {
         ),
         Container(
           height: MediaQuery.of(context).size.height * .2,
-          width: MediaQuery.of(context).size.width * .3,
+          width: MediaQuery.of(context).size.width * .25,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(
               Radius.circular(20),

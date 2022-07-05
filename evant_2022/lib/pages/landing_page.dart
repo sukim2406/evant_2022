@@ -1,3 +1,4 @@
+import 'package:evant_2022/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/responsive_layout_widget.dart';
@@ -23,18 +24,15 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
   Map userData = {};
+  String curUser = '';
 
   @override
   void initState() {
     super.initState();
-    SFControllers.instance.getCurUser().then(
+    SFController.instance.getCurUser().then(
       (result) {
-        UserController.instance.getCurUser(result).then((result) {
-          if (mounted) {
-            setState(() {
-              userData = result;
-            });
-          }
+        setState(() {
+          curUser = result;
         });
       },
     );
@@ -42,17 +40,25 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (userData.isEmpty) {
-      return const LoadingWidget();
-    }
-    return ResponsiveLayoutWidget(
-      mobileVer: _LandingMobilePage(
-        userData: userData,
-      ),
-      tabeltVer: LandingTabletPage(
-        userData: userData,
-      ),
-    );
+    return (curUser.isEmpty)
+        ? const LoadingWidget()
+        : FutureBuilder(
+            future: UserController.instance.getCurUser(curUser),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return ResponsiveLayoutWidget(
+                  mobileVer: _LandingMobilePage(
+                    userData: snapshot.data as Map,
+                  ),
+                  tabeltVer: LandingTabletPage(
+                    userData: snapshot.data as Map,
+                  ),
+                );
+              } else {
+                return const LoadingWidget();
+              }
+            },
+          );
   }
 }
 
@@ -99,7 +105,9 @@ class __LandingMobilePageState extends State<_LandingMobilePage> {
         color: Colors.white,
         child: Column(
           children: [
-            const AppBarWidget(),
+            AppBarWidget(
+              profileUrl: widget.userData['profilePicture'],
+            ),
             SizedBox(
               height: MediaQuery.of(context).size.height * .9,
               width: MediaQuery.of(context).size.width,
@@ -186,7 +194,9 @@ class _LandingTabletPageState extends State<LandingTabletPage> {
         color: Colors.white,
         child: Column(
           children: [
-            const AppBarWidget(),
+            AppBarWidget(
+              profileUrl: widget.userData['profilePicture'],
+            ),
             Row(
               children: [
                 Column(
