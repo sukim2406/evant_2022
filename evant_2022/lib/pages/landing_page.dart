@@ -1,4 +1,3 @@
-import 'package:evant_2022/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/responsive_layout_widget.dart';

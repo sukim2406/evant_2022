@@ -117,6 +117,7 @@ class __RegisterMobilePageState extends State<_RegisterMobilePage> {
               height: MediaQuery.of(context).size.height * .05,
             ),
             BoxedTextFieldWidget(
+              enabled: true,
               hintText: 'Email',
               width: MediaQuery.of(context).size.width * .6,
               controller: widget.emailController,
@@ -128,6 +129,7 @@ class __RegisterMobilePageState extends State<_RegisterMobilePage> {
               height: MediaQuery.of(context).size.height * .025,
             ),
             BoxedTextFieldWidget(
+              enabled: true,
               hintText: 'Password',
               width: MediaQuery.of(context).size.width * .6,
               controller: widget.passwordController,
@@ -138,6 +140,7 @@ class __RegisterMobilePageState extends State<_RegisterMobilePage> {
               height: MediaQuery.of(context).size.height * .025,
             ),
             BoxedTextFieldWidget(
+              enabled: true,
               hintText: 'Password Confirm',
               width: MediaQuery.of(context).size.width * .6,
               controller: widget.password2Controller,
@@ -148,6 +151,7 @@ class __RegisterMobilePageState extends State<_RegisterMobilePage> {
               height: MediaQuery.of(context).size.height * .025,
             ),
             BoxedTextFieldWidget(
+              enabled: true,
               hintText: 'Screen Name',
               width: MediaQuery.of(context).size.width * .6,
               controller: widget.screenNameController,
@@ -337,6 +341,7 @@ class __RegisterTabletPageState extends State<_RegisterTabletPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   BoxedTextFieldWidget(
+                    enabled: true,
                     hintText: 'Email',
                     width: MediaQuery.of(context).size.width * .5,
                     controller: widget.emailController,
@@ -348,6 +353,7 @@ class __RegisterTabletPageState extends State<_RegisterTabletPage> {
                     height: MediaQuery.of(context).size.height * .025,
                   ),
                   BoxedTextFieldWidget(
+                    enabled: true,
                     hintText: 'Password',
                     width: MediaQuery.of(context).size.width * .5,
                     controller: widget.passwordController,
@@ -358,6 +364,7 @@ class __RegisterTabletPageState extends State<_RegisterTabletPage> {
                     height: MediaQuery.of(context).size.height * .025,
                   ),
                   BoxedTextFieldWidget(
+                    enabled: true,
                     hintText: 'Password Confirm',
                     width: MediaQuery.of(context).size.width * .5,
                     controller: widget.password2Controller,
@@ -368,6 +375,7 @@ class __RegisterTabletPageState extends State<_RegisterTabletPage> {
                     height: MediaQuery.of(context).size.height * .025,
                   ),
                   BoxedTextFieldWidget(
+                    enabled: true,
                     hintText: 'Screen Name',
                     width: MediaQuery.of(context).size.width * .5,
                     controller: widget.screenNameController,

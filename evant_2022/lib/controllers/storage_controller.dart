@@ -30,4 +30,29 @@ class StorageController extends GetxController {
       return '';
     }
   }
+
+  Future uploadProfileImage(uid, image) async {
+    bool result = false;
+    try {
+      await storage.ref().child('$uid/profile.png').putData(image).then((path) {
+        result = true;
+      });
+      return result;
+    } catch (e) {
+      print('uploadProfileImage error ${e.toString()}');
+      return result;
+    }
+  }
+
+  Future getProfileImageUrl(uid) async {
+    String result = '';
+    try {
+      await storage.ref('$uid/profile.png').getDownloadURL().then((url) {
+        result = url;
+      });
+      return result;
+    } catch (e) {
+      return result;
+    }
+  }
 }

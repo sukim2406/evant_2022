@@ -45,4 +45,19 @@ class UserController extends GetxController {
       print('getProfilePicture error $e');
     }
   }
+
+  Future updateProfilePicture(uid, url) async {
+    bool result = false;
+    try {
+      await firestore
+          .collection('users')
+          .doc(uid)
+          .update({'profilePicture': url}).then((value) {
+        result = true;
+      });
+      return result;
+    } catch (e) {
+      return result;
+    }
+  }
 }

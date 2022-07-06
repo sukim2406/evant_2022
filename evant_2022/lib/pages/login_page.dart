@@ -109,6 +109,7 @@ class __LoginMobilePageState extends State<_LoginMobilePage> {
                 height: MediaQuery.of(context).size.height * .05,
               ),
               BoxedTextFieldWidget(
+                enabled: true,
                 autoFocus: true,
                 hintText: 'Email',
                 width: MediaQuery.of(context).size.width * .6,
@@ -120,6 +121,7 @@ class __LoginMobilePageState extends State<_LoginMobilePage> {
                 height: MediaQuery.of(context).size.height * .025,
               ),
               BoxedTextFieldWidget(
+                enabled: true,
                 hintText: 'Password',
                 width: MediaQuery.of(context).size.width * .6,
                 controller: widget.passwordController,
@@ -297,6 +299,7 @@ class __LoginTabletPageState extends State<_LoginTabletPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   BoxedTextFieldWidget(
+                    enabled: true,
                     autoFocus: true,
                     hintText: 'Email',
                     width: MediaQuery.of(context).size.width * .5,
@@ -308,6 +311,7 @@ class __LoginTabletPageState extends State<_LoginTabletPage> {
                     height: MediaQuery.of(context).size.height * .025,
                   ),
                   BoxedTextFieldWidget(
+                    enabled: true,
                     hintText: 'Password',
                     width: MediaQuery.of(context).size.width * .5,
                     controller: widget.passwordController,

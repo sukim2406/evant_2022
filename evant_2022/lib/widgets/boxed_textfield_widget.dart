@@ -9,6 +9,9 @@ class BoxedTextFieldWidget extends StatefulWidget {
   final bool obsecure;
   final FocusNode focusNode;
   final bool autoFocus;
+  final bool enabled;
+  final bool multiline;
+  final double height;
   const BoxedTextFieldWidget({
     Key? key,
     required this.hintText,
@@ -16,7 +19,10 @@ class BoxedTextFieldWidget extends StatefulWidget {
     required this.controller,
     required this.obsecure,
     required this.focusNode,
+    required this.enabled,
+    this.multiline = false,
     this.autoFocus = false,
+    this.height = 0,
   }) : super(key: key);
 
   @override
@@ -42,6 +48,7 @@ class _BoxedTextFieldWidgetState extends State<BoxedTextFieldWidget> {
   Widget build(BuildContext context) {
     return Container(
       width: widget.width,
+      height: (widget.height != 0) ? widget.height : null,
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         border: Border.all(
@@ -51,7 +58,10 @@ class _BoxedTextFieldWidgetState extends State<BoxedTextFieldWidget> {
         color: hasFocus ? Colors.green.shade200 : Colors.grey.shade300,
       ),
       child: TextField(
+        keyboardType: (widget.multiline) ? TextInputType.multiline : null,
+        maxLines: (widget.multiline) ? 5 : 1,
         focusNode: widget.focusNode,
+        enabled: widget.enabled,
         autofocus: (widget.autoFocus) ? true : false,
         controller: widget.controller,
         obscureText: widget.obsecure,

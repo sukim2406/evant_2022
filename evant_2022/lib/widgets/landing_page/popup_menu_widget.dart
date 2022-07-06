@@ -5,6 +5,9 @@ import '../responsive_layout_widget.dart';
 import '../../controllers/global_controller.dart' as global;
 import '../../controllers/auth_controller.dart';
 
+import '../../pages/profile_page.dart';
+import '../../pages/landing_page.dart';
+
 class PopupMenuWidget extends StatefulWidget {
   final String profileUrl;
   const PopupMenuWidget({
@@ -49,6 +52,12 @@ class _PopupMenuMobileWidgetState extends State<PopupMenuMobileWidget> {
       child: PopupMenuButton(
         itemBuilder: (BuildContext context) => [
           const PopupMenuItem(
+            value: 2,
+            child: Text(
+              'Home',
+            ),
+          ),
+          const PopupMenuItem(
             value: 1,
             child: Text(
               'Profile',
@@ -63,12 +72,26 @@ class _PopupMenuMobileWidgetState extends State<PopupMenuMobileWidget> {
           if (result == 0) {
             AuthController.instance.logout();
           } else if (result == 1) {
-            print('profile');
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const ProfilePage(),
+              ),
+              (route) => false,
+            );
+          } else if (result == 2) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const LandingPage(),
+              ),
+              (route) => false,
+            );
           }
         },
         icon: CircleAvatar(
           radius: MediaQuery.of(context).size.height * .04,
-          backgroundColor: global.primaryColor,
+          backgroundColor: Colors.white,
           backgroundImage: Image.network(
             widget.profileUrl,
             fit: BoxFit.contain,
