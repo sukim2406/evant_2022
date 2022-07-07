@@ -8,6 +8,7 @@ import './controllers/auth_controller.dart';
 import './controllers/user_controller.dart';
 import './controllers/sf_controller.dart';
 import './controllers/storage_controller.dart';
+import './controllers/event_controller.dart';
 
 import './widgets/loading_widget.dart';
 
@@ -28,6 +29,9 @@ Future<void> main() async {
       );
       Get.put(
         StorageController(),
+      );
+      Get.put(
+        EventController(),
       );
     },
   );

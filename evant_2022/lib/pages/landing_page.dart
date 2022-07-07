@@ -115,14 +115,8 @@ class __LandingMobilePageState extends State<_LandingMobilePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const WelcomeMessageWidget(),
-                    Container(
-                      height: MediaQuery.of(context).size.width * .9,
-                      width: MediaQuery.of(context).size.width * .9,
-                      color: Colors.white,
-                      child: MapScreenWidget(
-                        initLat: initLat,
-                        initLng: initLng,
-                      ),
+                    MapScreenWidget(
+                      userDoc: widget.userData,
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .05,
@@ -201,14 +195,14 @@ class _LandingTabletPageState extends State<LandingTabletPage> {
                 Column(
                   children: [
                     const WelcomeMessageWidget(),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .65,
-                      height: MediaQuery.of(context).size.height * .45,
-                      child: MapScreenWidget(
-                        initLat: initLat,
-                        initLng: initLng,
-                      ),
-                    ),
+                    // SizedBox(
+                    //   width: MediaQuery.of(context).size.width * .65,
+                    //   height: MediaQuery.of(context).size.height * .45,
+                    //   child: MapScreenWidget(
+                    //     initLat: initLat,
+                    //     initLng: initLng,
+                    //   ),
+                    // ),
                     const SearchCategoryWidget(),
                   ],
                 ),

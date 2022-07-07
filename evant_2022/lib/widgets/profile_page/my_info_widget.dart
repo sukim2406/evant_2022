@@ -218,89 +218,136 @@ class _MyInfoMobileWidgetState extends State<MyInfoMobileWidget> {
                   builder: (context) => const LoadingWidget(),
                 ),
               );
-              StorageController.instance
-                  .uploadProfileImage(widget.userDoc['uid'], newImage)
-                  .then((result) {
-                if (result) {
-                  StorageController.instance
-                      .getProfileImageUrl(widget.userDoc['uid'])
-                      .then((url) {
-                    if (url != '') {
-                      UserController.instance
-                          .updateProfilePicture(widget.userDoc['uid'], url)
-                          .then((result) {
-                        if (result) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const LandingPage(),
-                            ),
-                            (route) => false,
-                          );
-                        } else {
-                          Get.snackbar(
-                            'ERROR',
-                            'updateProfilePicture error',
-                            duration: const Duration(seconds: 5),
-                            onTap: (snackBar) {
-                              print('updateProfilePicture error');
-                            },
-                            backgroundColor: Colors.redAccent,
-                            snackPosition: SnackPosition.BOTTOM,
-                            titleText: const Text(
-                              'updateProfilePicture error',
-                              style: TextStyle(
-                                color: Colors.white,
+              if (imageSet) {
+                StorageController.instance
+                    .uploadProfileImage(widget.userDoc['uid'], newImage)
+                    .then((result) {
+                  if (result) {
+                    StorageController.instance
+                        .getProfileImageUrl(widget.userDoc['uid'])
+                        .then((url) {
+                      if (url != '') {
+                        UserController.instance
+                            .updateProfile(
+                          widget.userDoc['uid'],
+                          url,
+                          widget.screenNameController.text,
+                          widget.greetMsgController.text,
+                        )
+                            .then((result) {
+                          if (result) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const LandingPage(),
                               ),
+                              (route) => false,
+                            );
+                          } else {
+                            Get.snackbar(
+                              'ERROR',
+                              'updateProfile error',
+                              duration: const Duration(seconds: 5),
+                              onTap: (snackBar) {
+                                print('updateProfile error');
+                              },
+                              backgroundColor: Colors.redAccent,
+                              snackPosition: SnackPosition.BOTTOM,
+                              titleText: const Text(
+                                'updateProfile error',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
+                            print('updateProfile error');
+                            Navigator.pop(context);
+                          }
+                        });
+                      } else {
+                        Get.snackbar(
+                          'ERROR',
+                          'getProfileImageUrl error',
+                          duration: const Duration(seconds: 5),
+                          onTap: (snackBar) {
+                            print('getProfileImageUrl error');
+                          },
+                          backgroundColor: Colors.redAccent,
+                          snackPosition: SnackPosition.BOTTOM,
+                          titleText: const Text(
+                            'getProfileImageUrl error',
+                            style: TextStyle(
+                              color: Colors.white,
                             ),
-                          );
-                          print('updateProfilePicture error');
-                          Navigator.pop(context);
-                        }
-                      });
+                          ),
+                        );
+                        print('getProfileImageUrl error');
+                        Navigator.pop(context);
+                      }
+                    });
+                  } else {
+                    Get.snackbar(
+                      'ERROR',
+                      'uploadProfileImage error',
+                      duration: const Duration(seconds: 5),
+                      onTap: (snackBar) {
+                        print('uploadProfileImage error');
+                      },
+                      backgroundColor: Colors.redAccent,
+                      snackPosition: SnackPosition.BOTTOM,
+                      titleText: const Text(
+                        'uploadProfileImage error',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                    print('uploadProfileImage error');
+                    Navigator.pop(context);
+                  }
+                });
+              } else {
+                {
+                  UserController.instance
+                      .updateProfileNoPicture(
+                    widget.userDoc['uid'],
+                    widget.screenNameController.text,
+                    widget.greetMsgController.text,
+                  )
+                      .then((result) {
+                    if (result) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const LandingPage(),
+                        ),
+                        (route) => false,
+                      );
                     } else {
                       Get.snackbar(
                         'ERROR',
-                        'getProfileImageUrl error',
+                        'updateProfileNoPicture error',
                         duration: const Duration(seconds: 5),
                         onTap: (snackBar) {
-                          print('getProfileImageUrl error');
+                          print('updateProfileNoPicture error');
                         },
                         backgroundColor: Colors.redAccent,
                         snackPosition: SnackPosition.BOTTOM,
                         titleText: const Text(
-                          'getProfileImageUrl error',
+                          'updateProfileNoPicture error',
                           style: TextStyle(
                             color: Colors.white,
                           ),
                         ),
                       );
-                      print('getProfileImageUrl error');
+                      print('updateProfileNoPicture error');
                       Navigator.pop(context);
                     }
                   });
-                } else {
-                  Get.snackbar(
-                    'ERROR',
-                    'uploadProfileImage error',
-                    duration: const Duration(seconds: 5),
-                    onTap: (snackBar) {
-                      print('uploadProfileImage error');
-                    },
-                    backgroundColor: Colors.redAccent,
-                    snackPosition: SnackPosition.BOTTOM,
-                    titleText: const Text(
-                      'uploadProfileImage error',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  );
-                  print('uploadProfileImage error');
-                  Navigator.pop(context);
                 }
-              });
+              }
             },
             label: 'SAVE',
             btnColor: global.primaryColor,

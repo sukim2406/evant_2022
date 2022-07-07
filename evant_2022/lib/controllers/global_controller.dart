@@ -12,6 +12,14 @@ const secondaryColor = Color.fromRGBO(82, 82, 82, 1);
 const double initMapLat = 40.4259;
 const double initMapLng = 86.9081;
 
+const List<String> categoryStrings = [
+  'Etc',
+  'Sports',
+  'Study',
+  'Gaming',
+  'Social',
+];
+
 const List<Map> categories = <Map>[
   {
     'category': 'Sports',
