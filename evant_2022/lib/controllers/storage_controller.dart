@@ -22,8 +22,9 @@ class StorageController extends GetxController {
 
   Future getTempProfilePicture() async {
     try {
-      final ref =
-          await storage.ref('default/temp_profile.png').getDownloadURL();
+      final ref = await storage
+          .ref('profileImgs/default/temp_profile.png')
+          .getDownloadURL();
 
       return ref;
     } catch (e) {
@@ -34,7 +35,11 @@ class StorageController extends GetxController {
   Future uploadProfileImage(uid, image) async {
     bool result = false;
     try {
-      await storage.ref().child('$uid/profile.png').putData(image).then((path) {
+      await storage
+          .ref()
+          .child('profileImgs/$uid/profile.png')
+          .putData(image)
+          .then((path) {
         result = true;
       });
       return result;
@@ -47,11 +52,45 @@ class StorageController extends GetxController {
   Future getProfileImageUrl(uid) async {
     String result = '';
     try {
-      await storage.ref('$uid/profile.png').getDownloadURL().then((url) {
+      await storage
+          .ref('profileImgs/$uid/profile.png')
+          .getDownloadURL()
+          .then((url) {
         result = url;
       });
       return result;
     } catch (e) {
+      return result;
+    }
+  }
+
+  Future uploadEventImage(id, image) async {
+    bool result = false;
+    try {
+      await storage
+          .ref()
+          .child('eventImgs/$id.png')
+          .putData(image)
+          .then((path) {
+        result = true;
+      });
+      return result;
+    } catch (e) {
+      print('uploadEventImage error ${e.toString()}');
+      result = false;
+      return result;
+    }
+  }
+
+  Future getEventImageUrl(id) async {
+    String result = '';
+    try {
+      await storage.ref('eventImgs/$id.png').getDownloadURL().then((url) {
+        result = url;
+      });
+      return result;
+    } catch (e) {
+      print('getEventImageUrl error ${e.toString()}');
       return result;
     }
   }

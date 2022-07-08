@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +16,9 @@ import '../widgets/boxed_textfield_widget.dart';
 import '../controllers/global_controller.dart' as global;
 import '../controllers/user_controller.dart';
 import '../controllers/event_controller.dart';
+import '../controllers/storage_controller.dart';
+
+import '../pages/landing_page.dart';
 
 class NewEventPage extends StatefulWidget {
   final Map userDoc;
@@ -200,53 +202,118 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                     height: null,
                     width: MediaQuery.of(context).size.width * .2,
                     func: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoadingWidget(),
+                        ),
+                      );
                       final inputCheck = widget.checkEventInputs();
                       if (inputCheck) {
-                        final eventData = {
-                          'host': widget.userDoc['uid'],
-                          'id': '${widget.userDoc['uid']}-${DateTime.now()}',
-                          'lat': widget.point.latitude,
-                          'lng': widget.point.longitude,
-                          'title': widget.titleController.text,
-                          'description': widget.descriptionContoller.text,
-                          'category': widget.selectedCategory,
-                          'max': widget.maxController.text,
-                        };
-                        EventController.instance
-                            .createEventDoc(eventData)
-                            .then((result) async {
+                        String eventId =
+                            '${widget.userDoc['email']}-${widget.point.latitude}-${widget.point.longitude}';
+                        String eventImage = '';
+
+                        StorageController.instance
+                            .uploadEventImage(eventId, widget.newImage)
+                            .then((result) {
                           if (result) {
-                            UserController.instance
-                                .updateMyEvent(
-                              eventData['host'],
-                              eventData['id'],
-                            )
-                                .then((result) {
-                              if (result) {
-                                print('success');
-                              } else {
+                            StorageController.instance
+                                .getEventImageUrl(eventId)
+                                .then((url) {
+                              if (url == '') {
+                                Navigator.pop(context);
+                                print('getEventImageUrl error');
                                 Get.snackbar(
-                                  'updateMyEvent error',
-                                  'updateMyEvent error',
+                                  'getEventImageUrl error',
+                                  'getEventImageUrl error',
                                   backgroundColor: Colors.redAccent,
                                   snackPosition: SnackPosition.BOTTOM,
                                   titleText: const Text(
-                                    'updateMyEvent error',
+                                    'getEventImageUrl error',
                                     style: TextStyle(
                                       color: Colors.white,
                                     ),
                                   ),
                                 );
+                              } else {
+                                eventImage = url;
+                                final eventData = {
+                                  'host': widget.userDoc['uid'],
+                                  'id': eventId,
+                                  'lat': widget.point.latitude,
+                                  'lng': widget.point.longitude,
+                                  'title': widget.titleController.text,
+                                  'description':
+                                      widget.descriptionContoller.text,
+                                  'category': widget.selectedCategory,
+                                  'max': widget.maxController.text,
+                                  'eventImage': eventImage,
+                                  'open': true,
+                                };
+                                EventController.instance
+                                    .createEventDoc(eventData)
+                                    .then((result) async {
+                                  if (result) {
+                                    UserController.instance
+                                        .updateMyEvent(
+                                      eventData['host'],
+                                      eventData['id'],
+                                    )
+                                        .then((result) {
+                                      if (result) {
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                const LandingPage(),
+                                          ),
+                                          (route) => false,
+                                        );
+                                      } else {
+                                        Navigator.pop(context);
+                                        Get.snackbar(
+                                          'updateMyEvent error',
+                                          'updateMyEvent error',
+                                          backgroundColor: Colors.redAccent,
+                                          snackPosition: SnackPosition.BOTTOM,
+                                          titleText: const Text(
+                                            'updateMyEvent error',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    });
+                                  } else {
+                                    Navigator.pop(context);
+                                    Get.snackbar(
+                                      'createEventDoc error',
+                                      'createEventDoc error',
+                                      backgroundColor: Colors.redAccent,
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      titleText: const Text(
+                                        'createEventDoc error',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                });
                               }
                             });
                           } else {
+                            Navigator.pop(context);
+                            print('error');
                             Get.snackbar(
-                              'createEventDoc error',
-                              'createEventDoc error',
+                              'uploadEventImage error',
+                              'uploadEventImage error',
                               backgroundColor: Colors.redAccent,
                               snackPosition: SnackPosition.BOTTOM,
                               titleText: const Text(
-                                'createEventDoc error',
+                                'uploadEventImage error',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
@@ -271,9 +338,11 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        final image = await ImagePickerWeb.getImageAsBytes();
+                        try {
+                          final image = await ImagePickerWeb.getImageAsBytes();
 
-                        widget.setImageFunction(image!);
+                          widget.setImageFunction(image!);
+                        } catch (e) {}
                       },
                       child: Container(
                         height: MediaQuery.of(context).size.height * .4,

@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../controllers/global_controller.dart' as global;
+import '../../controllers/event_controller.dart';
 
 import '../../widgets/responsive_layout_widget.dart';
 import '../../widgets/rounded_btn_widget.dart';
@@ -27,6 +27,8 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
   Completer<GoogleMapController> controller = Completer();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   bool tempMarkerPlaced = false;
+  List loadedEvents = [];
+  late Set<Circle> circles;
 
   void addTempMarker(LatLng point) {
     const MarkerId markerId = MarkerId('tempMarker');
@@ -45,9 +47,51 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
     });
   }
 
+  void addEventMarker(eventData) {
+    MarkerId markerId = MarkerId(eventData['id']);
+    final Marker marker = Marker(
+        markerId: markerId,
+        position: LatLng(
+          eventData['lat'],
+          eventData['lng'],
+        ),
+        onTap: () {
+          print(eventData);
+        });
+    setState(() {
+      markers[markerId] = marker;
+    });
+  }
+
+  void loadEvents() async {
+    var temp = await EventController.instance.getEvents(
+      widget.userDoc['homeground']['lat'],
+      widget.userDoc['homeground']['lng'],
+    );
+    setState(() {
+      loadedEvents = temp;
+    });
+    loadedEvents.forEach((event) {
+      addEventMarker(event);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    circles = {
+      Circle(
+        circleId: const CircleId('myCircle'),
+        center: LatLng(
+          widget.userDoc['homeground']['lat'],
+          widget.userDoc['homeground']['lng'],
+        ),
+        radius: 10000,
+        fillColor: const Color.fromRGBO(9, 212, 3, .3),
+        strokeColor: global.primaryColor,
+        strokeWidth: 1,
+      ),
+    };
     initCameraPosiiton = CameraPosition(
       target: LatLng(
         widget.userDoc['homeground']['lat'],
@@ -55,18 +99,21 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
       ),
       zoom: 15,
     );
+    loadEvents();
   }
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayoutWidget(
       mobileVer: MapScreenMobileWidget(
+        circles: circles,
         initCameraPosition: initCameraPosiiton,
         addTempMarker: addTempMarker,
         controller: controller,
         markers: markers,
         tempMarkerPlaced: tempMarkerPlaced,
         userDoc: widget.userDoc,
+        loadedEvents: loadedEvents,
       ),
     );
   }
@@ -74,6 +121,8 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
 
 // ---------------------- MOBILE -------------------- //
 class MapScreenMobileWidget extends StatefulWidget {
+  final Set<Circle> circles;
+  final List loadedEvents;
   final Map userDoc;
   final Completer<GoogleMapController> controller;
   final void Function(LatLng) addTempMarker;
@@ -82,6 +131,8 @@ class MapScreenMobileWidget extends StatefulWidget {
   final bool tempMarkerPlaced;
   const MapScreenMobileWidget({
     Key? key,
+    required this.circles,
+    required this.loadedEvents,
     required this.initCameraPosition,
     required this.addTempMarker,
     required this.controller,
@@ -110,6 +161,7 @@ class _MapScreenMobileWidgetState extends State<MapScreenMobileWidget> {
             },
             markers: Set<Marker>.of(widget.markers.values),
             onTap: widget.addTempMarker,
+            circles: widget.circles,
           ),
           (widget.tempMarkerPlaced)
               ? Padding(
