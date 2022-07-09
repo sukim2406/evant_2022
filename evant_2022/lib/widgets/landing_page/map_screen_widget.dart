@@ -151,55 +151,81 @@ class _MapScreenMobileWidgetState extends State<MapScreenMobileWidget> {
     return SizedBox(
       height: MediaQuery.of(context).size.width * .9,
       width: MediaQuery.of(context).size.width * .9,
-      child: Stack(
+      child: Column(
         children: [
-          GoogleMap(
-            initialCameraPosition: widget.initCameraPosition,
-            zoomControlsEnabled: false,
-            onMapCreated: (GoogleMapController controller) {
-              widget.controller.complete(controller);
-            },
-            markers: Set<Marker>.of(widget.markers.values),
-            onTap: widget.addTempMarker,
-            circles: widget.circles,
-          ),
-          (widget.tempMarkerPlaced)
-              ? Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: RoundedBtnWidget(
-                      height: null,
-                      width: null,
-                      label: 'Add Event',
-                      btnColor: global.primaryColor,
-                      txtColor: Colors.white,
-                      func: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => NewEventPage(
-                              userDoc: widget.userDoc,
-                              point: widget
-                                  .markers[const MarkerId('tempMarker')]!
-                                  .position,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                )
-              : const Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(
-                    'Place marker by clicking on the map',
-                    style: TextStyle(
-                      color: global.secondaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .05,
+            width: MediaQuery.of(context).size.width * .9,
+            child: Row(
+              children: [
+                RoundedBtnWidget(
+                  height: MediaQuery.of(context).size.height * .05,
+                  width: MediaQuery.of(context).size.width * .3,
+                  func: () {
+                    print('hi');
+                  },
+                  label: 'JOIN Events',
+                  btnColor: global.secondaryColor,
+                  txtColor: Colors.white,
                 ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.width * .8,
+            width: MediaQuery.of(context).size.width * 8,
+            child: Stack(
+              children: [
+                GoogleMap(
+                  initialCameraPosition: widget.initCameraPosition,
+                  zoomControlsEnabled: false,
+                  onMapCreated: (GoogleMapController controller) {
+                    widget.controller.complete(controller);
+                  },
+                  markers: Set<Marker>.of(widget.markers.values),
+                  onTap: widget.addTempMarker,
+                  circles: widget.circles,
+                ),
+                (widget.tempMarkerPlaced)
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: RoundedBtnWidget(
+                            height: null,
+                            width: null,
+                            label: 'Add Event',
+                            btnColor: global.primaryColor,
+                            txtColor: Colors.white,
+                            func: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NewEventPage(
+                                    userDoc: widget.userDoc,
+                                    point: widget
+                                        .markers[const MarkerId('tempMarker')]!
+                                        .position,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      )
+                    : const Align(
+                        alignment: Alignment.topCenter,
+                        child: Text(
+                          'Place marker by clicking on the map',
+                          style: TextStyle(
+                            color: global.secondaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+              ],
+            ),
+          ),
         ],
       ),
     );
