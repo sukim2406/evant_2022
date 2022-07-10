@@ -29,6 +29,13 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
   bool tempMarkerPlaced = false;
   List loadedEvents = [];
   late Set<Circle> circles;
+  bool createMap = false;
+
+  void setMapChoice() {
+    setState(() {
+      createMap = !createMap;
+    });
+  }
 
   void addTempMarker(LatLng point) {
     const MarkerId markerId = MarkerId('tempMarker');
@@ -114,6 +121,8 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
         tempMarkerPlaced: tempMarkerPlaced,
         userDoc: widget.userDoc,
         loadedEvents: loadedEvents,
+        setMapChoice: setMapChoice,
+        createMap: createMap,
       ),
     );
   }
@@ -129,6 +138,8 @@ class MapScreenMobileWidget extends StatefulWidget {
   final CameraPosition initCameraPosition;
   final Map<MarkerId, Marker> markers;
   final bool tempMarkerPlaced;
+  final VoidCallback setMapChoice;
+  final bool createMap;
   const MapScreenMobileWidget({
     Key? key,
     required this.circles,
@@ -139,6 +150,8 @@ class MapScreenMobileWidget extends StatefulWidget {
     required this.markers,
     required this.tempMarkerPlaced,
     required this.userDoc,
+    required this.setMapChoice,
+    required this.createMap,
   }) : super(key: key);
 
   @override
@@ -157,19 +170,42 @@ class _MapScreenMobileWidgetState extends State<MapScreenMobileWidget> {
             height: MediaQuery.of(context).size.height * .05,
             width: MediaQuery.of(context).size.width * .9,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 RoundedBtnWidget(
                   height: MediaQuery.of(context).size.height * .05,
                   width: MediaQuery.of(context).size.width * .3,
                   func: () {
-                    print('hi');
+                    if (widget.createMap) {
+                    } else {
+                      widget.setMapChoice();
+                    }
                   },
                   label: 'JOIN Events',
-                  btnColor: global.secondaryColor,
+                  btnColor: (widget.createMap)
+                      ? global.secondaryColor
+                      : global.primaryColor,
+                  txtColor: Colors.white,
+                ),
+                RoundedBtnWidget(
+                  height: MediaQuery.of(context).size.height * .05,
+                  width: MediaQuery.of(context).size.width * .3,
+                  func: () {
+                    if (widget.createMap) {
+                      widget.setMapChoice();
+                    } else {}
+                  },
+                  label: 'CREATE Events',
+                  btnColor: (widget.createMap)
+                      ? global.primaryColor
+                      : global.secondaryColor,
                   txtColor: Colors.white,
                 ),
               ],
             ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .01,
           ),
           SizedBox(
             height: MediaQuery.of(context).size.width * .8,
