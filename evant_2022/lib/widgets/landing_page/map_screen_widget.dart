@@ -31,9 +31,22 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
   late Set<Circle> circles;
   bool createMap = false;
 
+  void setCreateEventMap() {
+    setState(() {
+      createMap = true;
+    });
+  }
+
+  void setJoinEventMap() {
+    setState(() {
+      createMap = false;
+    });
+  }
+
   void setMapChoice() {
     setState(() {
       createMap = !createMap;
+      print(createMap);
     });
   }
 
@@ -121,8 +134,9 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
         tempMarkerPlaced: tempMarkerPlaced,
         userDoc: widget.userDoc,
         loadedEvents: loadedEvents,
-        setMapChoice: setMapChoice,
-        createMap: createMap,
+        setJoinEventMap: setJoinEventMap,
+        setCreateEventMap: setCreateEventMap,
+        createEventMap: createMap,
       ),
     );
   }
@@ -138,8 +152,9 @@ class MapScreenMobileWidget extends StatefulWidget {
   final CameraPosition initCameraPosition;
   final Map<MarkerId, Marker> markers;
   final bool tempMarkerPlaced;
-  final VoidCallback setMapChoice;
-  final bool createMap;
+  final VoidCallback setJoinEventMap;
+  final VoidCallback setCreateEventMap;
+  final bool createEventMap;
   const MapScreenMobileWidget({
     Key? key,
     required this.circles,
@@ -150,8 +165,9 @@ class MapScreenMobileWidget extends StatefulWidget {
     required this.markers,
     required this.tempMarkerPlaced,
     required this.userDoc,
-    required this.setMapChoice,
-    required this.createMap,
+    required this.setJoinEventMap,
+    required this.setCreateEventMap,
+    required this.createEventMap,
   }) : super(key: key);
 
   @override
@@ -176,13 +192,10 @@ class _MapScreenMobileWidgetState extends State<MapScreenMobileWidget> {
                   height: MediaQuery.of(context).size.height * .05,
                   width: MediaQuery.of(context).size.width * .3,
                   func: () {
-                    if (widget.createMap) {
-                    } else {
-                      widget.setMapChoice();
-                    }
+                    widget.setJoinEventMap();
                   },
                   label: 'JOIN Events',
-                  btnColor: (widget.createMap)
+                  btnColor: (widget.createEventMap)
                       ? global.secondaryColor
                       : global.primaryColor,
                   txtColor: Colors.white,
@@ -191,12 +204,10 @@ class _MapScreenMobileWidgetState extends State<MapScreenMobileWidget> {
                   height: MediaQuery.of(context).size.height * .05,
                   width: MediaQuery.of(context).size.width * .3,
                   func: () {
-                    if (widget.createMap) {
-                      widget.setMapChoice();
-                    } else {}
+                    widget.setCreateEventMap();
                   },
                   label: 'CREATE Events',
-                  btnColor: (widget.createMap)
+                  btnColor: (widget.createEventMap)
                       ? global.primaryColor
                       : global.secondaryColor,
                   txtColor: Colors.white,
@@ -220,7 +231,9 @@ class _MapScreenMobileWidgetState extends State<MapScreenMobileWidget> {
                   },
                   markers: Set<Marker>.of(widget.markers.values),
                   onTap: widget.addTempMarker,
-                  circles: widget.circles,
+                  circles: (widget.createEventMap)
+                      ? const <Circle>{}
+                      : widget.circles,
                 ),
                 (widget.tempMarkerPlaced)
                     ? Padding(
@@ -249,11 +262,13 @@ class _MapScreenMobileWidgetState extends State<MapScreenMobileWidget> {
                           ),
                         ),
                       )
-                    : const Align(
+                    : Align(
                         alignment: Alignment.topCenter,
                         child: Text(
-                          'Place marker by clicking on the map',
-                          style: TextStyle(
+                          (widget.createEventMap)
+                              ? 'Place marker by clicking on the map'
+                              : 'Events within 10 km of your homeground are shown',
+                          style: const TextStyle(
                             color: global.secondaryColor,
                             fontWeight: FontWeight.bold,
                           ),
