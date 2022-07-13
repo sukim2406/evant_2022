@@ -53,6 +53,9 @@ class _NewEventPageState extends State<NewEventPage> {
     } else if (int.tryParse(maxController.text) == null) {
       errorString = 'Please enter integer as maximum number of participants';
       result = false;
+    } else if (int.tryParse(maxController.text)! <= 2) {
+      errorString = 'Participants must be bigger than 2';
+      result = false;
     } else {
       result = true;
     }
@@ -239,7 +242,7 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                               } else {
                                 eventImage = url;
                                 final eventData = {
-                                  'host': widget.userDoc['uid'],
+                                  'host': widget.userDoc['screenName'],
                                   'id': eventId,
                                   'lat': widget.point.latitude,
                                   'lng': widget.point.longitude,
@@ -248,6 +251,9 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                                       widget.descriptionContoller.text,
                                   'category': widget.selectedCategory,
                                   'max': widget.maxController.text,
+                                  'rsvpList': [
+                                    widget.userDoc['screenName'],
+                                  ],
                                   'eventImage': eventImage,
                                   'open': true,
                                 };
@@ -257,7 +263,7 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                                   if (result) {
                                     UserController.instance
                                         .updateMyEvent(
-                                      eventData['host'],
+                                      widget.userDoc['uid'],
                                       eventData['id'],
                                     )
                                         .then((result) {
@@ -321,6 +327,8 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                             );
                           }
                         });
+                      } else {
+                        Navigator.pop(context);
                       }
                     },
                     label: 'CREATE',

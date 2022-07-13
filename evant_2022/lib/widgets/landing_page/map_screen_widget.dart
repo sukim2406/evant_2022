@@ -10,6 +10,7 @@ import '../../widgets/responsive_layout_widget.dart';
 import '../../widgets/rounded_btn_widget.dart';
 
 import '../../pages/new_event_page.dart';
+import '../../pages/event_detail_page.dart';
 
 class MapScreenWidget extends StatefulWidget {
   final Map userDoc;
@@ -72,14 +73,30 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
   void addEventMarker(eventData) {
     MarkerId markerId = MarkerId(eventData['id']);
     final Marker marker = Marker(
-        markerId: markerId,
-        position: LatLng(
-          eventData['lat'],
-          eventData['lng'],
-        ),
-        onTap: () {
-          print(eventData);
-        });
+      markerId: markerId,
+      position: LatLng(
+        eventData['lat'],
+        eventData['lng'],
+      ),
+      // onTap: () {
+      //   print(eventData);
+      // },
+      infoWindow: InfoWindow(
+          title: eventData['title'],
+          snippet: eventData['description'],
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EventDetailPage(
+                  eventData: eventData,
+                  userDoc: widget.userDoc,
+                ),
+              ),
+            );
+          }),
+    );
+
     setState(() {
       joinableMarkers[markerId] = marker;
     });
