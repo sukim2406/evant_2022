@@ -1,10 +1,11 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/responsive_layout_widget.dart';
 import '../widgets/landing_page/app_bar_widget.dart';
+import '../widgets/rounded_btn_widget.dart';
 import '../widgets/event_detail_page/attendance_widget.dart';
+import '../widgets/event_detail_page/event_map_widget.dart';
 
 import '../controllers/global_controller.dart' as global;
 
@@ -90,64 +91,6 @@ class _EventDetailMobilePageState extends State<EventDetailMobilePage> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * .05,
-                width: MediaQuery.of(context).size.width * .8,
-                child: Row(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      height: MediaQuery.of(context).size.height * .05,
-                      width: MediaQuery.of(context).size.width * .4,
-                      child: RichText(
-                        textAlign: TextAlign.start,
-                        text: TextSpan(
-                          text: 'host : ',
-                          style: const TextStyle(
-                            color: global.secondaryColor,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: widget.eventData['host'],
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    AttendanceWidget(
-                      userDoc: widget.userDoc,
-                      eventData: widget.eventData,
-                    ),
-                  ],
-                ),
-              ),
-              (widget.rsvpListExpanded)
-                  ? SizedBox(
-                      height: MediaQuery.of(context).size.height * .2,
-                      width: MediaQuery.of(context).size.width * .8,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(),
-                          ),
-                          Container(
-                            height: MediaQuery.of(context).size.height * .2,
-                            width: MediaQuery.of(context).size.width * .2,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                              color: Color.fromRGBO(82, 82, 82, .5),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(),
-              SizedBox(
                 height: MediaQuery.of(context).size.height * .4,
                 width: MediaQuery.of(context).size.width * .8,
                 child: Center(
@@ -156,9 +99,6 @@ class _EventDetailMobilePageState extends State<EventDetailMobilePage> {
                     fit: BoxFit.contain,
                   ),
                 ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .01,
               ),
               Container(
                 height: MediaQuery.of(context).size.height * .3,
@@ -176,10 +116,88 @@ class _EventDetailMobilePageState extends State<EventDetailMobilePage> {
                 ),
                 child: Center(child: Text(widget.eventData['description'])),
               ),
-              Container(
-                height: MediaQuery.of(context).size.height * .5,
-                width: MediaQuery.of(context).size.width * .8,
-                color: Colors.red,
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .01,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  EventMapWidget(eventData: widget.eventData),
+                  Container(
+                    height: MediaQuery.of(context).size.height * .4,
+                    width: MediaQuery.of(context).size.width * .4,
+                    // color: Colors.grey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .03,
+                          width: MediaQuery.of(context).size.width * .4,
+                          child: FittedBox(
+                            alignment: Alignment.centerRight,
+                            child: RichText(
+                              textAlign: TextAlign.end,
+                              text: TextSpan(
+                                text: 'host : ',
+                                style: const TextStyle(
+                                  color: global.secondaryColor,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: widget.eventData['host'],
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        AttendanceWidget(
+                          userDoc: widget.userDoc,
+                          eventData: widget.eventData,
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .03,
+                          width: MediaQuery.of(context).size.width * .4,
+                          child: FittedBox(
+                            alignment: Alignment.centerRight,
+                            child: RichText(
+                              textAlign: TextAlign.end,
+                              text: TextSpan(
+                                text: 'category : ',
+                                style: const TextStyle(
+                                  color: global.secondaryColor,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: widget.eventData['category'],
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        RoundedBtnWidget(
+                          height: MediaQuery.of(context).size.height * .05,
+                          width: MediaQuery.of(context).size.width * .4,
+                          func: () {
+                            print('Im going!');
+                          },
+                          label: 'I\'m Going! ',
+                          btnColor: Colors.white,
+                          txtColor: global.primaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

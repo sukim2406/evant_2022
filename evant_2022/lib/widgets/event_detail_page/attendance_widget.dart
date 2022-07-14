@@ -114,51 +114,53 @@ class _AttendanceMobileWidgetState extends State<AttendanceMobileWidget> {
   Widget build(BuildContext context) {
     return CompositedTransformTarget(
       link: layerLink,
-      child: Container(
-        alignment: Alignment.centerRight,
-        height: MediaQuery.of(context).size.height * .05,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * .03,
         width: MediaQuery.of(context).size.width * .4,
-        child: RichText(
-          textAlign: TextAlign.end,
-          text: TextSpan(
-            text: 'attendance : ',
-            style: const TextStyle(
-              color: global.secondaryColor,
+        child: FittedBox(
+          alignment: Alignment.centerRight,
+          child: RichText(
+            textAlign: TextAlign.end,
+            text: TextSpan(
+              text: 'attendance : ',
+              style: const TextStyle(
+                color: global.secondaryColor,
+              ),
+              children: [
+                TextSpan(
+                  text: widget.eventData['rsvpList'].length.toString(),
+                  style: TextStyle(
+                    color: (widget.eventData['rsvpList'].length.toString() ==
+                            widget.eventData['max'])
+                        ? Colors.red
+                        : global.primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      widget.toggleList();
+                      if (widget.showList) {
+                        showRsvpOverlay();
+                      } else {
+                        hideOverLay();
+                      }
+                    },
+                ),
+                const TextSpan(
+                  text: '/ ',
+                  style: TextStyle(
+                    color: global.secondaryColor,
+                  ),
+                ),
+                TextSpan(
+                  text: widget.eventData['max'],
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            children: [
-              TextSpan(
-                text: widget.eventData['rsvpList'].length.toString(),
-                style: TextStyle(
-                  color: (widget.eventData['rsvpList'].length.toString() ==
-                          widget.eventData['max'])
-                      ? Colors.red
-                      : global.primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    widget.toggleList();
-                    if (widget.showList) {
-                      showRsvpOverlay();
-                    } else {
-                      hideOverLay();
-                    }
-                  },
-              ),
-              const TextSpan(
-                text: '/ ',
-                style: TextStyle(
-                  color: global.secondaryColor,
-                ),
-              ),
-              TextSpan(
-                text: widget.eventData['max'],
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
           ),
         ),
       ),
