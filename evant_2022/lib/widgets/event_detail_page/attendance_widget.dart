@@ -1,3 +1,4 @@
+import 'package:evant_2022/controllers/user_controller.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -20,10 +21,40 @@ class AttendanceWidget extends StatefulWidget {
 
 class _AttendanceWidgetState extends State<AttendanceWidget> {
   bool showList = true;
+  List attendanceList = [];
 
   void toggleList() {
     setState(() {
       showList = !showList;
+    });
+  }
+
+  getAttendanceList(uid) async {
+    Map info = {};
+    String screenName = '';
+    String profileUrl = '';
+
+    await UserController.instance.getScreenName(uid).then((result) {
+      screenName = result;
+    });
+    await UserController.instance.getProfileUrl(uid).then((result) {
+      profileUrl = result;
+    });
+
+    info['screenName'] = screenName;
+    info['profileUrl'] = profileUrl;
+
+    return info;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.eventData['rsvpList'].forEach((attendee) {
+      getAttendanceList(attendee).then((result) {
+        attendanceList.add(result);
+      });
     });
   }
 
@@ -35,6 +66,7 @@ class _AttendanceWidgetState extends State<AttendanceWidget> {
         eventData: widget.eventData,
         toggleList: toggleList,
         showList: showList,
+        attendanceList: attendanceList,
       ),
     );
   }
@@ -47,12 +79,14 @@ class AttendanceMobileWidget extends StatefulWidget {
   final Map eventData;
   final bool showList;
   final VoidCallback toggleList;
+  final List attendanceList;
   const AttendanceMobileWidget({
     Key? key,
     required this.userDoc,
     required this.eventData,
     required this.showList,
     required this.toggleList,
+    required this.attendanceList,
   }) : super(key: key);
 
   @override
@@ -99,11 +133,14 @@ class _AttendanceMobileWidgetState extends State<AttendanceMobileWidget> {
             color: Color.fromRGBO(82, 82, 82, .5),
           ),
           child: ListView.builder(
-            itemCount: widget.eventData['rsvpList'].length,
+            itemCount: widget.attendanceList.length,
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
-                leading: Text(index.toString()),
-                title: Text(widget.eventData['rsvpList'][index]),
+                leading: Image.network(
+                  widget.attendanceList[index]['profileUrl'],
+                  fit: BoxFit.cover,
+                ),
+                title: Text(widget.attendanceList[index]['screenName']),
               );
             },
           ),

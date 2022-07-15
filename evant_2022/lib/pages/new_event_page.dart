@@ -53,8 +53,8 @@ class _NewEventPageState extends State<NewEventPage> {
     } else if (int.tryParse(maxController.text) == null) {
       errorString = 'Please enter integer as maximum number of participants';
       result = false;
-    } else if (int.tryParse(maxController.text)! <= 2) {
-      errorString = 'Participants must be bigger than 2';
+    } else if (int.tryParse(maxController.text)! < 2) {
+      errorString = 'Minimum participants must at least be 2';
       result = false;
     } else {
       result = true;
@@ -242,7 +242,7 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                               } else {
                                 eventImage = url;
                                 final eventData = {
-                                  'host': widget.userDoc['screenName'],
+                                  'host': widget.userDoc['uid'],
                                   'id': eventId,
                                   'lat': widget.point.latitude,
                                   'lng': widget.point.longitude,
@@ -252,7 +252,7 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                                   'category': widget.selectedCategory,
                                   'max': widget.maxController.text,
                                   'rsvpList': [
-                                    widget.userDoc['screenName'],
+                                    widget.userDoc['uid'],
                                   ],
                                   'eventImage': eventImage,
                                   'open': true,

@@ -1,3 +1,5 @@
+import 'package:evant_2022/controllers/user_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -27,6 +29,20 @@ class EventController extends GetxController {
     return true;
   }
 
+  Future getEventDoc(eventId) async {
+    try {
+      return await firestore
+          .collection('events')
+          .doc(eventId)
+          .get()
+          .then((DocumentSnapshot result) {
+        return result.data();
+      });
+    } catch (e) {
+      print('getEventDoc error $e');
+    }
+  }
+
   getEvents(double homegroundLat, double homegroundLng) async {
     // double latLessLimit = homegroundLat - .1;
     // double latGreaterLimit = homegroundLat + .1;
@@ -50,5 +66,48 @@ class EventController extends GetxController {
     });
 
     return result;
+  }
+
+  Future updateEventRSVP(Map userDoc, Map eventData) async {
+    bool result = false;
+    List newList = [];
+    if (eventData['rsvpList'].contains(userDoc['uid'])) {
+      newList = eventData['rsvpList'];
+      newList.remove(userDoc['uid']);
+    } else {
+      newList = eventData['rsvpList'];
+      newList.add(userDoc['uid']);
+    }
+    await firestore.collection('events').doc(eventData['id']).update(
+      {
+        'rsvpList': newList,
+      },
+    ).then((value) {
+      result = true;
+    });
+    return result;
+  }
+
+  Future closeEvent(eventId) async {
+    bool result = false;
+    try {
+      final Map eventDoc = await getEventDoc(eventId);
+      await firestore.collection('events').doc(eventId).update(
+        {'open': false},
+      ).then((value) async {
+        eventDoc['rsvpList'].forEach((attendee) async {
+          await UserController.instance
+              .closeEvent(eventId, attendee)
+              .then((closed) {
+            print('UserContoller closeEvent result $closed');
+            result = closed;
+          });
+        });
+      });
+      return result;
+    } catch (e) {
+      print('closeEvent error $e');
+      return result;
+    }
   }
 }

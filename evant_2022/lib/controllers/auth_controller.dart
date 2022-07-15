@@ -105,6 +105,8 @@ class AuthController extends GetxController {
           'screenName': result.user?.email,
           'greetMsg': 'Welcome to Evant!',
           'following': [],
+          'myEvents': [],
+          'closedEvents': [],
           'homeground': {
             'lat': 37.532600,
             'lng': 127.024612,
