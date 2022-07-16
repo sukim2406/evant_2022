@@ -110,4 +110,21 @@ class EventController extends GetxController {
       return result;
     }
   }
+
+  Future deleteEvent(eventId) async {
+    bool result = false;
+    try {
+      await firestore
+          .collection('events')
+          .doc(eventId)
+          .delete()
+          .then((deleteResult) {
+        result = true;
+      });
+      return result;
+    } catch (e) {
+      print('EventController deleteEvent error : $e');
+      return result;
+    }
+  }
 }

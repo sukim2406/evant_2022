@@ -54,20 +54,24 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
   }
 
   void addTempMarker(LatLng point) {
-    const MarkerId markerId = MarkerId('tempMarker');
-    final Marker marker = Marker(
-        markerId: markerId,
-        position: point,
-        onTap: () {
-          setState(() {
-            createMarkers.remove(markerId);
-            tempMarkerPlaced = false;
+    if (tempMarkerPlaced) {
+    } else {
+      const MarkerId markerId = MarkerId('tempMarker');
+      final Marker marker = Marker(
+          markerId: markerId,
+          position: point,
+          onTap: () {
+            setState(() {
+              createMarkers.remove(markerId);
+              tempMarkerPlaced = false;
+            });
           });
-        });
-    setState(() {
-      createMarkers[markerId] = marker;
-      tempMarkerPlaced = true;
-    });
+
+      setState(() {
+        createMarkers[markerId] = marker;
+        tempMarkerPlaced = true;
+      });
+    }
   }
 
   void addEventMarker(eventData) {

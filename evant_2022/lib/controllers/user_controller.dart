@@ -223,4 +223,25 @@ class UserController extends GetxController {
     });
     return result;
   }
+
+  Future cancelEvent(String eventId, List rsvpList) async {
+    bool result = false;
+    try {
+      rsvpList.forEach((attendee) async {
+        await updateMyEvent(attendee, eventId).then(
+          (updateMyEventResult) {
+            if (updateMyEventResult) {
+              result = true;
+            } else {
+              result = false;
+            }
+          },
+        );
+      });
+      return result;
+    } catch (e) {
+      print('UserController cancelEvent error : $e');
+      return result;
+    }
+  }
 }

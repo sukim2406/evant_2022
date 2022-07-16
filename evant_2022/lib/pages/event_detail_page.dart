@@ -6,6 +6,7 @@ import '../widgets/landing_page/app_bar_widget.dart';
 import '../widgets/rounded_btn_widget.dart';
 import '../widgets/event_detail_page/attendance_widget.dart';
 import '../widgets/event_detail_page/event_map_widget.dart';
+import '../widgets/event_detail_page/bottom_app_bar.dart';
 
 import '../controllers/global_controller.dart' as global;
 import '../controllers/event_controller.dart';
@@ -298,97 +299,12 @@ class _EventDetailMobilePageState extends State<EventDetailMobilePage> {
                 ),
               ),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .05,
-              width: MediaQuery.of(context).size.width * .9,
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Icon(
-                      Icons.arrow_back_ios,
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(),
-                  ),
-                  RoundedBtnWidget(
-                    height: null,
-                    width: null,
-                    func: () async {
-                      if (widget.amIHost()) {
-                        await EventController.instance
-                            .closeEvent(widget.eventData['id'])
-                            .then((result) async {
-                          print('event_detail_page closeEvent result $result');
-                          if (result) {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    const LandingPage(),
-                              ),
-                              (route) => false,
-                            );
-                          } else {
-                            print('closeEvent error');
-                          }
-                        });
-                      } else if (widget.isEventFull()) {
-                      } else {
-                        EventController.instance
-                            .updateEventRSVP(widget.userDoc, widget.eventData)
-                            .then(
-                          (result) {
-                            if (result) {
-                              UserController.instance
-                                  .updateMyEvent(
-                                widget.userDoc['uid'],
-                                widget.eventData['id'],
-                              )
-                                  .then(
-                                (result) {
-                                  if (result) {
-                                    Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const LandingPage(),
-                                      ),
-                                      (route) => false,
-                                    );
-                                  } else {
-                                    print('updateMyEvent error');
-                                  }
-                                },
-                              );
-                            } else {
-                              print('joinEvent error');
-                            }
-                          },
-                        );
-                      }
-                    },
-                    label: (widget.amIHost())
-                        ? 'CLOSE EVENT'
-                        : (widget.amIAttending())
-                            ? 'CANCEL RSVP'
-                            : (widget.isEventFull())
-                                ? 'EVENT FULL'
-                                : 'JOIN',
-                    btnColor: (widget.amIHost())
-                        ? Colors.redAccent
-                        : (widget.amIAttending())
-                            ? Colors.redAccent
-                            : (widget.isEventFull())
-                                ? Colors.grey
-                                : global.primaryColor,
-                    txtColor: Colors.white,
-                  )
-                ],
-              ),
+            BottomAppBarWidget(
+              userDoc: widget.userDoc,
+              eventData: widget.eventData,
+              amIHost: widget.amIHost,
+              isEventFull: widget.isEventFull,
+              amIAttending: widget.amIAttending,
             ),
           ],
         ),
