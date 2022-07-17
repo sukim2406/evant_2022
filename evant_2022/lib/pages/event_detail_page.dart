@@ -268,25 +268,362 @@ class _EventDetailMobilePageState extends State<EventDetailMobilePage> {
                                   ),
                                 ),
                               ),
-                              RoundedBtnWidget(
-                                height:
-                                    MediaQuery.of(context).size.height * .05,
-                                width: MediaQuery.of(context).size.width * .3,
-                                func: () {
-                                  print('Im going!');
-                                },
-                                label: (widget.amIHost())
-                                    ? 'CANCEL EVENT'
-                                    : (widget.amIAttending())
-                                        ? 'CANCEL RSVP'
-                                        : 'JOIN',
-                                btnColor: (widget.amIHost())
-                                    ? Colors.redAccent
-                                    : (widget.amIAttending())
-                                        ? Colors.redAccent
-                                        : global.primaryColor,
-                                txtColor: Colors.white,
-                              ),
+                              (widget.amIHost())
+                                  ? RoundedBtnWidget(
+                                      height: null,
+                                      width: null,
+                                      func: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                            title: const Text(
+                                              'Close this event ?',
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text(
+                                                  'Cancel',
+                                                  style: TextStyle(
+                                                    color:
+                                                        global.secondaryColor,
+                                                  ),
+                                                ),
+                                              ),
+                                              TextButton(
+                                                onPressed: () async {
+                                                  await EventController.instance
+                                                      .closeEvent(widget
+                                                          .eventData['id'])
+                                                      .then(
+                                                    (result) async {
+                                                      print(
+                                                          'event_detail_page closeEvent result $result');
+                                                      if (result) {
+                                                        Navigator
+                                                            .pushAndRemoveUntil(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (BuildContext
+                                                                    context) =>
+                                                                const LandingPage(),
+                                                          ),
+                                                          (route) => false,
+                                                        );
+                                                      } else {
+                                                        print(
+                                                            'closeEvent error');
+                                                      }
+                                                    },
+                                                  );
+                                                },
+                                                child: const Text(
+                                                  'OK',
+                                                  style: TextStyle(
+                                                    color: Colors.redAccent,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      label: 'CLOSE EVENT',
+                                      btnColor: Colors.redAccent,
+                                      txtColor: Colors.white,
+                                    )
+                                  : (widget.amIAttending())
+                                      ? RoundedBtnWidget(
+                                          height: null,
+                                          width: null,
+                                          func: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  AlertDialog(
+                                                title: const Text(
+                                                    'Cancel RSVP for this event ?'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text(
+                                                      'back',
+                                                      style: TextStyle(
+                                                          color: global
+                                                              .secondaryColor),
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      EventController.instance
+                                                          .updateEventRSVP(
+                                                              widget.userDoc,
+                                                              widget.eventData)
+                                                          .then(
+                                                        (updateEventRSVPResult) {
+                                                          if (updateEventRSVPResult) {
+                                                            UserController
+                                                                .instance
+                                                                .updateMyEvent(
+                                                              widget.userDoc[
+                                                                  'uid'],
+                                                              widget.eventData[
+                                                                  'id'],
+                                                            )
+                                                                .then(
+                                                                    (updateMyEventResult) {
+                                                              if (updateMyEventResult) {
+                                                                Navigator
+                                                                    .pushAndRemoveUntil(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (BuildContext
+                                                                            context) =>
+                                                                        const LandingPage(),
+                                                                  ),
+                                                                  (route) =>
+                                                                      false,
+                                                                );
+                                                              } else {
+                                                                print(
+                                                                    'updateMyEvent error');
+                                                              }
+                                                            });
+                                                          } else {
+                                                            print(
+                                                                'updateEventRSVP error');
+                                                          }
+                                                        },
+                                                      );
+                                                    },
+                                                    child: const Text(
+                                                      'Cancel RSVP',
+                                                      style: TextStyle(
+                                                        color: Colors.redAccent,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                          label: 'Cancel RSVP',
+                                          btnColor: global.secondaryColor,
+                                          txtColor: Colors.white,
+                                        )
+                                      : (widget.isEventFull())
+                                          ? RoundedBtnWidget(
+                                              height: null,
+                                              width: null,
+                                              func: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          AlertDialog(
+                                                    title: const Text(
+                                                      'Sorry, Event is full',
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: const Text(
+                                                          'OK',
+                                                          style: TextStyle(
+                                                            color: global
+                                                                .secondaryColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                              label: 'JOIN EVENT',
+                                              btnColor: Colors.grey,
+                                              txtColor: Colors.white,
+                                            )
+                                          : RoundedBtnWidget(
+                                              height: null,
+                                              width: null,
+                                              func: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          AlertDialog(
+                                                    title: const Text(
+                                                        'Join this event ?'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: const Text(
+                                                          'Cancel',
+                                                          style: TextStyle(
+                                                              color: global
+                                                                  .secondaryColor),
+                                                        ),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          EventController
+                                                              .instance
+                                                              .updateEventRSVP(
+                                                                  widget
+                                                                      .userDoc,
+                                                                  widget
+                                                                      .eventData)
+                                                              .then(
+                                                            (updateEventRSVPResult) {
+                                                              if (updateEventRSVPResult) {
+                                                                UserController
+                                                                    .instance
+                                                                    .updateMyEvent(
+                                                                  widget.userDoc[
+                                                                      'uid'],
+                                                                  widget.eventData[
+                                                                      'id'],
+                                                                )
+                                                                    .then(
+                                                                        (updateMyEventResult) {
+                                                                  if (updateMyEventResult) {
+                                                                    Navigator
+                                                                        .pushAndRemoveUntil(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (BuildContext context) =>
+                                                                                const LandingPage(),
+                                                                      ),
+                                                                      (route) =>
+                                                                          false,
+                                                                    );
+                                                                  } else {
+                                                                    print(
+                                                                        'updateMyEvent error');
+                                                                  }
+                                                                });
+                                                              } else {
+                                                                print(
+                                                                    'updateEventRSVP error');
+                                                              }
+                                                            },
+                                                          );
+                                                        },
+                                                        child: const Text(
+                                                          'JOIN',
+                                                          style: TextStyle(
+                                                            color: global
+                                                                .primaryColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                              label: 'JOIN EVENT',
+                                              btnColor: global.primaryColor,
+                                              txtColor: Colors.white,
+                                            ),
+                              (widget.amIHost())
+                                  ? RoundedBtnWidget(
+                                      height: null,
+                                      width: null,
+                                      func: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                            title: const Text(
+                                                'Cancel this event ? '),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text(
+                                                  'No',
+                                                  style: TextStyle(
+                                                    color:
+                                                        global.secondaryColor,
+                                                  ),
+                                                ),
+                                              ),
+                                              TextButton(
+                                                onPressed: () async {
+                                                  await UserController.instance
+                                                      .cancelEvent(
+                                                    widget.eventData['id'],
+                                                    widget
+                                                        .eventData['rsvpList'],
+                                                  )
+                                                      .then((result) async {
+                                                    await EventController
+                                                        .instance
+                                                        .deleteEvent(widget
+                                                            .eventData['id'])
+                                                        .then(
+                                                            (deleteEventResult) {
+                                                      Navigator
+                                                          .pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              const LandingPage(),
+                                                        ),
+                                                        (route) => false,
+                                                      );
+                                                    });
+                                                  });
+                                                },
+                                                child: const Text(
+                                                  'Yes',
+                                                  style: TextStyle(
+                                                    color: Colors.redAccent,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      label: 'CANCEL EVENT',
+                                      btnColor: global.secondaryColor,
+                                      txtColor: Colors.white,
+                                    )
+                                  : Container(),
+                              // RoundedBtnWidget(
+                              //   height:
+                              //       MediaQuery.of(context).size.height * .05,
+                              //   width: MediaQuery.of(context).size.width * .3,
+                              //   func: () {
+                              //     print('Im going!');
+                              //   },
+                              //   label: (widget.amIHost())
+                              //       ? 'CANCEL EVENT'
+                              //       : (widget.amIAttending())
+                              //           ? 'CANCEL RSVP'
+                              //           : 'JOIN',
+                              //   btnColor: (widget.amIHost())
+                              //       ? Colors.redAccent
+                              //       : (widget.amIAttending())
+                              //           ? Colors.redAccent
+                              //           : global.primaryColor,
+                              //   txtColor: Colors.white,
+                              // ),
                             ],
                           ),
                         ),
