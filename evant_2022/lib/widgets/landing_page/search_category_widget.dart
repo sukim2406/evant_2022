@@ -5,8 +5,14 @@ import '../../controllers/global_controller.dart' as global;
 
 import '../../widgets/responsive_layout_widget.dart';
 
+import '../../pages/category_page.dart';
+
 class SearchCategoryWidget extends StatefulWidget {
-  const SearchCategoryWidget({Key? key}) : super(key: key);
+  final Map userDoc;
+  const SearchCategoryWidget({
+    Key? key,
+    required this.userDoc,
+  }) : super(key: key);
 
   @override
   State<SearchCategoryWidget> createState() => _SearchCategoryWidgetState();
@@ -32,6 +38,7 @@ class _SearchCategoryWidgetState extends State<SearchCategoryWidget> {
     return ResponsiveLayoutWidget(
       mobileVer: SearchCategoryMobileWidget(
         controller: scrollController,
+        userDoc: widget.userDoc,
       ),
       tabeltVer: SearchCategoryTabletWidget(
         controller: scrollController,
@@ -43,10 +50,12 @@ class _SearchCategoryWidgetState extends State<SearchCategoryWidget> {
 // --------------------------- MOBILE ------------------------ //
 
 class SearchCategoryMobileWidget extends StatefulWidget {
+  final Map userDoc;
   final ScrollController controller;
   const SearchCategoryMobileWidget({
     Key? key,
     required this.controller,
+    required this.userDoc,
   }) : super(key: key);
 
   @override
@@ -83,42 +92,56 @@ class _SearchCategoryMobileWidgetState
             padding: const EdgeInsets.all(8),
             itemCount: global.categories.length,
             itemBuilder: (BuildContext context, int index) {
-              return Container(
-                width: MediaQuery.of(context).size.width * .4,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: Image(
-                          width: MediaQuery.of(context).size.width * .4,
-                          height: MediaQuery.of(context).size.width * .4,
-                          image: AssetImage(
-                            global.categories[index]['img'],
-                          ),
-                          fit: BoxFit.cover,
-                        ),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => CategoryPage(
+                        userDoc: widget.userDoc,
+                        initCategory: global.categories[index]['category'],
                       ),
-                      Center(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * .4,
-                          height: MediaQuery.of(context).size.height * .1,
-                          color: const Color.fromRGBO(82, 82, 82, .5),
-                          child: Center(
-                            child: Text(
-                              global.categories[index]['category'],
-                              style: GoogleFonts.yellowtail(
-                                fontSize: 40,
-                                color: global.primaryColor,
+                    ),
+                    (route) => false,
+                  );
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * .4,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Image(
+                            width: MediaQuery.of(context).size.width * .4,
+                            height: MediaQuery.of(context).size.width * .4,
+                            image: AssetImage(
+                              global.categories[index]['img'],
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Center(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * .4,
+                            height: MediaQuery.of(context).size.height * .1,
+                            color: const Color.fromRGBO(82, 82, 82, .5),
+                            child: Center(
+                              child: Text(
+                                global.categories[index]['category'],
+                                style: GoogleFonts.yellowtail(
+                                  fontSize: 40,
+                                  color: global.primaryColor,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );

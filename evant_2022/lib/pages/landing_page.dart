@@ -121,7 +121,9 @@ class __LandingMobilePageState extends State<_LandingMobilePage> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .05,
                     ),
-                    const SearchCategoryWidget(),
+                    SearchCategoryWidget(
+                      userDoc: widget.userData,
+                    ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .05,
                     ),
@@ -203,7 +205,9 @@ class _LandingTabletPageState extends State<LandingTabletPage> {
                     //     initLng: initLng,
                     //   ),
                     // ),
-                    const SearchCategoryWidget(),
+                    SearchCategoryWidget(
+                      userDoc: widget.userData,
+                    ),
                   ],
                 ),
                 Column(
