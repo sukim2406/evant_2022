@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/responsive_layout_widget.dart';
+import '../widgets/landing_page/app_bar_widget.dart';
+import '../widgets/category_page/category_message_widget.dart';
+import '../widgets/category_page/category_table_widget.dart';
+import '../widgets/category_page/create_button_widget.dart';
 
 import '../controllers/event_controller.dart';
 
@@ -42,6 +46,7 @@ class _CategoryPageState extends State<CategoryPage> {
     return ResponsiveLayoutWidget(
       mobileVer: CategoryMobilePage(
         eventsList: loadedEvents,
+        userDoc: widget.userDoc,
       ),
     );
   }
@@ -50,10 +55,12 @@ class _CategoryPageState extends State<CategoryPage> {
 // ----------------------- MOBILE -------------------------- //
 
 class CategoryMobilePage extends StatefulWidget {
+  final Map userDoc;
   final List eventsList;
   const CategoryMobilePage({
     Key? key,
     required this.eventsList,
+    required this.userDoc,
   }) : super(key: key);
 
   @override
@@ -67,8 +74,20 @@ class _CategoryMobilePageState extends State<CategoryMobilePage> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        color: Colors.grey,
-        child: Text(widget.eventsList.toString()),
+        color: Colors.white,
+        child: Column(
+          children: [
+            AppBarWidget(
+              profileUrl: widget.userDoc['profilePicture'],
+            ),
+            const CategoryMessageWidget(),
+            const CategoryTableWidget(),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .05,
+            ),
+            const CreateButtonWidget(),
+          ],
+        ),
       ),
     );
   }
