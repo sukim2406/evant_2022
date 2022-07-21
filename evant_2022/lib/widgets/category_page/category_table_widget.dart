@@ -36,12 +36,42 @@ class _CategoryTableMobileWidgetState extends State<CategoryTableMobileWidget> {
       width: MediaQuery.of(context).size.width * .9,
       color: Colors.grey,
       child: DataTable(
-        columns: [
+        columns: const [
           DataColumn(
-            label: Text('Title'),
+            label: Text(
+              'Title',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
           DataColumn(
-            label: Text('Host'),
+            label: Text(
+              'Host',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Text(
+              'Attendance',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Text(
+              'Map',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
         rows: [],
