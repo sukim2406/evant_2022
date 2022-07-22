@@ -25,13 +25,13 @@ class CategoryMessageMobileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * .15,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width * .5,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
             height: MediaQuery.of(context).size.height * .05,
-            width: MediaQuery.of(context).size.width * .9,
+            width: MediaQuery.of(context).size.width * .5,
             child: FittedBox(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -45,7 +45,7 @@ class CategoryMessageMobileWidget extends StatelessWidget {
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * .025,
-            width: MediaQuery.of(context).size.width * .9,
+            width: MediaQuery.of(context).size.width * .5,
             child: const FittedBox(
               alignment: Alignment.centerLeft,
               child: Text(

@@ -66,6 +66,15 @@ class _CategoryTableMobileWidgetState extends State<CategoryTableMobileWidget> {
           ),
           DataColumn(
             label: Text(
+              'Status',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Text(
               'Map',
               style: TextStyle(
                 color: Colors.white,

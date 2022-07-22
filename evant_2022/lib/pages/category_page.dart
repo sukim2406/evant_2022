@@ -5,6 +5,7 @@ import '../widgets/landing_page/app_bar_widget.dart';
 import '../widgets/category_page/category_message_widget.dart';
 import '../widgets/category_page/category_table_widget.dart';
 import '../widgets/category_page/create_button_widget.dart';
+import '../widgets/category_page/dropdown_widget.dart';
 
 import '../controllers/event_controller.dart';
 
@@ -23,6 +24,7 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   List loadedEvents = [];
+  late String selectedCategory;
 
   void loadEvents() async {
     var temp = await EventController.instance.getEvents(
@@ -34,11 +36,18 @@ class _CategoryPageState extends State<CategoryPage> {
     });
   }
 
+  void setSelectedCategory(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     loadEvents();
+    setSelectedCategory(widget.initCategory);
   }
 
   @override
@@ -47,6 +56,8 @@ class _CategoryPageState extends State<CategoryPage> {
       mobileVer: CategoryMobilePage(
         eventsList: loadedEvents,
         userDoc: widget.userDoc,
+        initCategory: selectedCategory,
+        setSelectedCategory: setSelectedCategory,
       ),
     );
   }
@@ -55,12 +66,16 @@ class _CategoryPageState extends State<CategoryPage> {
 // ----------------------- MOBILE -------------------------- //
 
 class CategoryMobilePage extends StatefulWidget {
+  final Function setSelectedCategory;
+  final String initCategory;
   final Map userDoc;
   final List eventsList;
   const CategoryMobilePage({
     Key? key,
     required this.eventsList,
     required this.userDoc,
+    required this.initCategory,
+    required this.setSelectedCategory,
   }) : super(key: key);
 
   @override
@@ -80,7 +95,24 @@ class _CategoryMobilePageState extends State<CategoryMobilePage> {
             AppBarWidget(
               profileUrl: widget.userDoc['profilePicture'],
             ),
-            const CategoryMessageWidget(),
+            Row(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .05,
+                ),
+                const CategoryMessageWidget(),
+                const Expanded(
+                  child: SizedBox(),
+                ),
+                DropdownWidget(
+                  selectedCategory: widget.initCategory,
+                  setSelectedCategory: widget.setSelectedCategory,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .05,
+                ),
+              ],
+            ),
             const CategoryTableWidget(),
             SizedBox(
               height: MediaQuery.of(context).size.height * .05,
