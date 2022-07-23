@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker_web/image_picker_web.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import '../widgets/responsive_layout_widget.dart';
 import '../widgets/landing_page/app_bar_widget.dart';
@@ -40,6 +41,15 @@ class _NewEventPageState extends State<NewEventPage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController maxController = TextEditingController();
   TextEditingController descriptionContoller = TextEditingController();
+  DateTime startTime = DateTime.now();
+  DateTime endTime = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+    23,
+    59,
+    59,
+  );
 
   bool checkEventInputs() {
     bool result;
@@ -55,6 +65,9 @@ class _NewEventPageState extends State<NewEventPage> {
       result = false;
     } else if (int.tryParse(maxController.text)! < 2) {
       errorString = 'Minimum participants must at least be 2';
+      result = false;
+    } else if (endTime.compareTo(startTime) < 0) {
+      errorString = 'End time cannot be earlier then start time';
       result = false;
     } else {
       result = true;
@@ -101,6 +114,20 @@ class _NewEventPageState extends State<NewEventPage> {
     });
   }
 
+  void setStartTime(newStartTime) {
+    setState(() {
+      startTime = newStartTime;
+    });
+  }
+
+  void setEndTime(newEndTime) {
+    setState(
+      () {
+        endTime = newEndTime;
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -124,6 +151,10 @@ class _NewEventPageState extends State<NewEventPage> {
               selectedCategory: selectedCategory,
               setSelectedCategory: setCategory,
               checkEventInputs: checkEventInputs,
+              startTime: startTime,
+              setStartTime: setStartTime,
+              endTime: endTime,
+              setEndTime: setEndTime,
             ),
           )
         : const LoadingWidget();
@@ -144,6 +175,10 @@ class NewEventMobilePage extends StatefulWidget {
   final TextEditingController maxController;
   final TextEditingController descriptionContoller;
   final String? selectedCategory;
+  final DateTime startTime;
+  final DateTime endTime;
+  final void Function(DateTime) setStartTime;
+  final void Function(DateTime) setEndTime;
   const NewEventMobilePage({
     Key? key,
     required this.checkEventInputs,
@@ -157,6 +192,10 @@ class NewEventMobilePage extends StatefulWidget {
     required this.descriptionContoller,
     required this.selectedCategory,
     required this.setSelectedCategory,
+    required this.startTime,
+    required this.endTime,
+    required this.setStartTime,
+    required this.setEndTime,
   }) : super(key: key);
 
   @override
@@ -256,6 +295,8 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                                   ],
                                   'eventImage': eventImage,
                                   'open': true,
+                                  'startTime': widget.startTime,
+                                  'endTime': widget.endTime,
                                 };
                                 EventController.instance
                                     .createEventDoc(eventData)
@@ -451,7 +492,70 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                               widget.setSelectedCategory(item.toString());
                             }),
                       ],
-                    )
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          children: [
+                            const Text('Start Time'),
+                            GestureDetector(
+                              onTap: () {
+                                DatePicker.showDateTimePicker(
+                                  context,
+                                  minTime: DateTime.now(),
+                                  maxTime: DateTime(2030, 12, 31),
+                                  onConfirm: (date) {
+                                    widget.setStartTime(date);
+                                  },
+                                );
+                              },
+                              child: BoxedTextFieldWidget(
+                                hintText: 'Start Time',
+                                width: MediaQuery.of(context).size.width * .3,
+                                controller: TextEditingController(
+                                  text: widget.startTime
+                                      .toString()
+                                      .substring(0, 19),
+                                ),
+                                obsecure: false,
+                                focusNode: FocusNode(),
+                                enabled: false,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            const Text('End Time'),
+                            GestureDetector(
+                              onTap: () {
+                                DatePicker.showDateTimePicker(
+                                  context,
+                                  minTime: DateTime.now(),
+                                  maxTime: DateTime(2030, 12, 31),
+                                  onConfirm: (date) {
+                                    widget.setEndTime(date);
+                                  },
+                                );
+                              },
+                              child: BoxedTextFieldWidget(
+                                hintText: 'End Time',
+                                width: MediaQuery.of(context).size.width * .3,
+                                controller: TextEditingController(
+                                  text: widget.endTime
+                                      .toString()
+                                      .substring(0, 19),
+                                ),
+                                obsecure: false,
+                                focusNode: FocusNode(),
+                                enabled: false,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

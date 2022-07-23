@@ -18,23 +18,6 @@ class DropdownWidget extends StatefulWidget {
 }
 
 class _DropdownWidgetState extends State<DropdownWidget> {
-  // late String selectedCategory;
-
-  // void setSelectedCategory(String category) {
-  //   setState(() {
-  //     selectedCategory = category;
-  //   });
-  // }
-
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   setState(() {
-  //     selectedCategory = widget.initValue;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayoutWidget(
