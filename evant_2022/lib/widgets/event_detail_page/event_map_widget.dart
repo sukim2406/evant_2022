@@ -53,15 +53,15 @@ class _EventMapWidgetState extends State<EventMapWidget> {
     super.initState();
     initCameraPosition = CameraPosition(
       target: LatLng(
-        widget.eventData['lat'],
-        widget.eventData['lng'],
+        widget.eventData['location']['lat'],
+        widget.eventData['location']['lng'],
       ),
       zoom: 17,
     );
     addMarker(
       LatLng(
-        widget.eventData['lat'],
-        widget.eventData['lng'],
+        widget.eventData['location']['lat'],
+        widget.eventData['location']['lng'],
       ),
     );
   }

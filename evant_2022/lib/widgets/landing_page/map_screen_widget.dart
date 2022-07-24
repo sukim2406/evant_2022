@@ -79,8 +79,8 @@ class _MapScreenWidgetState extends State<MapScreenWidget> {
     final Marker marker = Marker(
       markerId: markerId,
       position: LatLng(
-        eventData['lat'],
-        eventData['lng'],
+        eventData['location']['lat'],
+        eventData['location']['lng'],
       ),
       // onTap: () {
       //   print(eventData);

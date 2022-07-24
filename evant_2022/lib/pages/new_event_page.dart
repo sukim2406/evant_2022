@@ -283,8 +283,14 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                                 final eventData = {
                                   'host': widget.userDoc['uid'],
                                   'id': eventId,
-                                  'lat': widget.point.latitude,
-                                  'lng': widget.point.longitude,
+                                  'location': {
+                                    'lat': widget.point.latitude,
+                                    'lng': widget.point.longitude,
+                                  },
+                                  'time': {
+                                    'start': widget.startTime,
+                                    'end': widget.endTime,
+                                  },
                                   'title': widget.titleController.text,
                                   'description':
                                       widget.descriptionContoller.text,
@@ -295,8 +301,6 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                                   ],
                                   'eventImage': eventImage,
                                   'open': true,
-                                  'startTime': widget.startTime,
-                                  'endTime': widget.endTime,
                                 };
                                 EventController.instance
                                     .createEventDoc(eventData)

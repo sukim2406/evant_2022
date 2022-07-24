@@ -58,8 +58,8 @@ class EventController extends GetxController {
         .then((QuerySnapshot qs) {
       qs.docs.forEach((doc) {
         var eventData = doc.data() as Map;
-        var distance = calculateDistance(
-            doc['lat'], homegroundLat, doc['lng'], homegroundLng);
+        var distance = calculateDistance(doc['location']['lat'], homegroundLat,
+            doc['location']['lng'], homegroundLng);
         if (distance < 10000) {
           eventData['distance'] = distance;
           result.add(eventData);
