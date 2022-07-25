@@ -4,22 +4,17 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker_web/image_picker_web.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import '../widgets/responsive_layout_widget.dart';
 import '../widgets/landing_page/app_bar_widget.dart';
-import '../widgets/rounded_btn_widget.dart';
 import '../widgets/loading_widget.dart';
 import '../widgets/boxed_textfield_widget.dart';
+import '../widgets/new_event_page/title_message_widget.dart';
+import '../widgets/new_event_page/button_row_widget.dart';
+import '../widgets/new_event_page/image_select_widget.dart';
 
 import '../controllers/global_controller.dart' as global;
-import '../controllers/user_controller.dart';
-import '../controllers/event_controller.dart';
-import '../controllers/storage_controller.dart';
-
-import '../pages/landing_page.dart';
 
 class NewEventPage extends StatefulWidget {
   final Map userDoc;
@@ -36,6 +31,7 @@ class NewEventPage extends StatefulWidget {
 
 class _NewEventPageState extends State<NewEventPage> {
   late String? selectedCategory;
+  late String? selectedStatus;
   late Uint8List newImage;
   bool imageSet = false;
   TextEditingController titleController = TextEditingController();
@@ -106,6 +102,12 @@ class _NewEventPageState extends State<NewEventPage> {
     );
   }
 
+  void setStatus(status) {
+    setState(() {
+      selectedStatus = status;
+    });
+  }
+
   void setDefaultImage() async {
     final ByteData bytes = await rootBundle.load('img/event_default.png');
     setState(() {
@@ -133,6 +135,7 @@ class _NewEventPageState extends State<NewEventPage> {
     super.initState();
     setDefaultImage();
     selectedCategory = global.categoryStrings[0];
+    selectedStatus = global.statusStrings[0];
   }
 
   @override
@@ -155,6 +158,8 @@ class _NewEventPageState extends State<NewEventPage> {
               setStartTime: setStartTime,
               endTime: endTime,
               setEndTime: setEndTime,
+              setSelectedStatus: setStatus,
+              selectedStatus: selectedStatus,
             ),
           )
         : const LoadingWidget();
@@ -179,6 +184,8 @@ class NewEventMobilePage extends StatefulWidget {
   final DateTime endTime;
   final void Function(DateTime) setStartTime;
   final void Function(DateTime) setEndTime;
+  final String? selectedStatus;
+  final void Function(String) setSelectedStatus;
   const NewEventMobilePage({
     Key? key,
     required this.checkEventInputs,
@@ -196,6 +203,8 @@ class NewEventMobilePage extends StatefulWidget {
     required this.endTime,
     required this.setStartTime,
     required this.setEndTime,
+    required this.selectedStatus,
+    required this.setSelectedStatus,
   }) : super(key: key);
 
   @override
@@ -213,175 +222,19 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
         child: Column(
           children: [
             AppBarWidget(profileUrl: widget.userDoc['profilePicture']),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .05,
-              width: MediaQuery.of(context).size.width * .9,
-              child: FittedBox(
-                child: Text('Create a New Event',
-                    style: GoogleFonts.yellowtail(
-                      color: global.secondaryColor,
-                      fontWeight: FontWeight.bold,
-                    )),
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * .9,
-              height: MediaQuery.of(context).size.height * .1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  RoundedBtnWidget(
-                    height: null,
-                    width: MediaQuery.of(context).size.width * .2,
-                    func: () {
-                      Navigator.pop(context);
-                    },
-                    label: 'CANCEL',
-                    btnColor: global.secondaryColor,
-                    txtColor: Colors.white,
-                  ),
-                  RoundedBtnWidget(
-                    height: null,
-                    width: MediaQuery.of(context).size.width * .2,
-                    func: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoadingWidget(),
-                        ),
-                      );
-                      final inputCheck = widget.checkEventInputs();
-                      if (inputCheck) {
-                        String eventId =
-                            '${widget.userDoc['email']}-${widget.point.latitude}-${widget.point.longitude}';
-                        String eventImage = '';
-
-                        StorageController.instance
-                            .uploadEventImage(eventId, widget.newImage)
-                            .then((result) {
-                          if (result) {
-                            StorageController.instance
-                                .getEventImageUrl(eventId)
-                                .then((url) {
-                              if (url == '') {
-                                Navigator.pop(context);
-                                print('getEventImageUrl error');
-                                Get.snackbar(
-                                  'getEventImageUrl error',
-                                  'getEventImageUrl error',
-                                  backgroundColor: Colors.redAccent,
-                                  snackPosition: SnackPosition.BOTTOM,
-                                  titleText: const Text(
-                                    'getEventImageUrl error',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                eventImage = url;
-                                final eventData = {
-                                  'host': widget.userDoc['uid'],
-                                  'id': eventId,
-                                  'location': {
-                                    'lat': widget.point.latitude,
-                                    'lng': widget.point.longitude,
-                                  },
-                                  'time': {
-                                    'start': widget.startTime,
-                                    'end': widget.endTime,
-                                  },
-                                  'title': widget.titleController.text,
-                                  'description':
-                                      widget.descriptionContoller.text,
-                                  'category': widget.selectedCategory,
-                                  'max': widget.maxController.text,
-                                  'rsvpList': [
-                                    widget.userDoc['uid'],
-                                  ],
-                                  'eventImage': eventImage,
-                                  'open': true,
-                                };
-                                EventController.instance
-                                    .createEventDoc(eventData)
-                                    .then((result) async {
-                                  if (result) {
-                                    UserController.instance
-                                        .updateMyEvent(
-                                      widget.userDoc['uid'],
-                                      eventData['id'],
-                                    )
-                                        .then((result) {
-                                      if (result) {
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                const LandingPage(),
-                                          ),
-                                          (route) => false,
-                                        );
-                                      } else {
-                                        Navigator.pop(context);
-                                        Get.snackbar(
-                                          'updateMyEvent error',
-                                          'updateMyEvent error',
-                                          backgroundColor: Colors.redAccent,
-                                          snackPosition: SnackPosition.BOTTOM,
-                                          titleText: const Text(
-                                            'updateMyEvent error',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    });
-                                  } else {
-                                    Navigator.pop(context);
-                                    Get.snackbar(
-                                      'createEventDoc error',
-                                      'createEventDoc error',
-                                      backgroundColor: Colors.redAccent,
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      titleText: const Text(
-                                        'createEventDoc error',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                });
-                              }
-                            });
-                          } else {
-                            Navigator.pop(context);
-                            print('error');
-                            Get.snackbar(
-                              'uploadEventImage error',
-                              'uploadEventImage error',
-                              backgroundColor: Colors.redAccent,
-                              snackPosition: SnackPosition.BOTTOM,
-                              titleText: const Text(
-                                'uploadEventImage error',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            );
-                          }
-                        });
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    },
-                    label: 'CREATE',
-                    btnColor: global.primaryColor,
-                    txtColor: Colors.white,
-                  ),
-                ],
-              ),
+            const TitleMessageWidget(),
+            ButtonRowWidget(
+              checkEventInputs: widget.checkEventInputs,
+              userDoc: widget.userDoc,
+              point: widget.point,
+              newImage: widget.newImage,
+              startTime: widget.startTime,
+              endTime: widget.endTime,
+              titleController: widget.titleController,
+              descriptionController: widget.descriptionContoller,
+              maxController: widget.maxController,
+              selectedCategory: widget.selectedCategory,
+              selectedStatus: widget.selectedStatus,
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * .65,
@@ -389,50 +242,9 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    GestureDetector(
-                      onTap: () async {
-                        try {
-                          final image = await ImagePickerWeb.getImageAsBytes();
-
-                          widget.setImageFunction(image!);
-                        } catch (e) {}
-                      },
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * .4,
-                        width: MediaQuery.of(context).size.width * .8,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: global.secondaryColor,
-                            width: 5,
-                          ),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(
-                              20,
-                            ),
-                          ),
-                        ),
-                        child: Stack(
-                          children: [
-                            Center(
-                              child: Image.memory(
-                                widget.newImage,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(
-                                bottom: 20,
-                              ),
-                              child: Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Text(
-                                  'click to add image',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    ImageSelectWidget(
+                      setImageFunction: widget.setImageFunction,
+                      newImage: widget.newImage,
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .025,
@@ -481,20 +293,46 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                           ),
                         ),
                         DropdownButton<String>(
-                            value: widget.selectedCategory,
-                            items: global.categoryStrings
-                                .map(
-                                  (item) => DropdownMenuItem<String>(
-                                    value: item,
-                                    child: Text(
-                                      item,
-                                    ),
+                          value: widget.selectedCategory,
+                          items: global.categoryStrings
+                              .map(
+                                (item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
                                   ),
-                                )
-                                .toList(),
-                            onChanged: (item) {
-                              widget.setSelectedCategory(item.toString());
-                            }),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (item) {
+                            widget.setSelectedCategory(item.toString());
+                          },
+                        ),
+                        const Expanded(
+                          child: SizedBox(),
+                        ),
+                        const Text(
+                          'Status :   ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        DropdownButton<String>(
+                          value: widget.selectedStatus,
+                          items: global.statusStrings
+                              .map(
+                                (item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (item) {
+                            widget.setSelectedStatus(item.toString());
+                          },
+                        ),
                       ],
                     ),
                     Row(

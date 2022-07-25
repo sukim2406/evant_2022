@@ -20,6 +20,13 @@ const List<String> categoryStrings = [
   'Social',
 ];
 
+const List<String> statusStrings = [
+  'Open',
+  'Joinable',
+  'In progress',
+  'Closed',
+];
+
 const List<Map> categories = <Map>[
   {
     'category': 'Sports',
