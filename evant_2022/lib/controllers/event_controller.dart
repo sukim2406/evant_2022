@@ -43,6 +43,35 @@ class EventController extends GetxController {
     }
   }
 
+  getEventsByCategory(
+      double homegroundLat, double homegroundLng, String category) async {
+    List result = [];
+    await firestore
+        .collection('events')
+        .where('category', isEqualTo: category)
+        .get()
+        .then(
+      (QuerySnapshot qs) {
+        qs.docs.forEach(
+          (doc) {
+            var eventData = doc.data() as Map;
+            var distance = calculateDistance(
+              doc['location']['lat'],
+              homegroundLat,
+              doc['location']['lng'],
+              homegroundLng,
+            );
+            if (distance < 10000) {
+              eventData['distance'] = distance;
+              result.add(eventData);
+            }
+          },
+        );
+      },
+    );
+    return result;
+  }
+
   getEvents(double homegroundLat, double homegroundLng) async {
     // double latLessLimit = homegroundLat - .1;
     // double latGreaterLimit = homegroundLat + .1;

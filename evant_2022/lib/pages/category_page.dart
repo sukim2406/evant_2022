@@ -36,6 +36,17 @@ class _CategoryPageState extends State<CategoryPage> {
     });
   }
 
+  void loadEventsByCategory() async {
+    var temp = await EventController.instance.getEventsByCategory(
+      widget.userDoc['homeground']['lat'],
+      widget.userDoc['homeground']['lng'],
+      selectedCategory,
+    );
+    setState(() {
+      loadedEvents = temp;
+    });
+  }
+
   void setSelectedCategory(String category) {
     setState(() {
       selectedCategory = category;
@@ -46,8 +57,9 @@ class _CategoryPageState extends State<CategoryPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    loadEvents();
+    // loadEvents();
     setSelectedCategory(widget.initCategory);
+    loadEventsByCategory();
   }
 
   @override
@@ -85,6 +97,7 @@ class CategoryMobilePage extends StatefulWidget {
 class _CategoryMobilePageState extends State<CategoryMobilePage> {
   @override
   Widget build(BuildContext context) {
+    print(widget.eventsList);
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,

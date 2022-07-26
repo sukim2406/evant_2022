@@ -1,3 +1,4 @@
+import 'package:evant_2022/pages/landing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -51,16 +52,27 @@ class _AppBarMobileWidgetState extends State<AppBarMobileWidget> {
       width: MediaQuery.of(context).size.width,
       child: Row(
         children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * .1,
-            width: MediaQuery.of(context).size.width * .3,
-            child: FittedBox(
-              child: Text(
-                'Evant',
-                style: GoogleFonts.yellowtail(
-                  textStyle: const TextStyle(
-                    color: global.primaryColor,
-                    fontWeight: FontWeight.bold,
+          GestureDetector(
+            onTap: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const LandingPage(),
+                ),
+                (route) => false,
+              );
+            },
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * .1,
+              width: MediaQuery.of(context).size.width * .3,
+              child: FittedBox(
+                child: Text(
+                  'Evant',
+                  style: GoogleFonts.yellowtail(
+                    textStyle: const TextStyle(
+                      color: global.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -102,16 +114,27 @@ class _AppBarTabletWidgetState extends State<AppBarTabletWidget> {
       width: MediaQuery.of(context).size.width,
       child: Column(
         children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * .1,
-            width: MediaQuery.of(context).size.width * .3,
-            child: FittedBox(
-              child: Text(
-                'Evant',
-                style: GoogleFonts.yellowtail(
-                  textStyle: const TextStyle(
-                    color: global.primaryColor,
-                    fontWeight: FontWeight.bold,
+          GestureDetector(
+            onTap: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const LandingPage(),
+                ),
+                (route) => false,
+              );
+            },
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * .1,
+              width: MediaQuery.of(context).size.width * .3,
+              child: FittedBox(
+                child: Text(
+                  'Evant',
+                  style: GoogleFonts.yellowtail(
+                    textStyle: const TextStyle(
+                      color: global.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
