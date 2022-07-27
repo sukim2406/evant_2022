@@ -51,6 +51,8 @@ class _CategoryPageState extends State<CategoryPage> {
     setState(() {
       selectedCategory = category;
     });
+
+    loadEventsByCategory();
   }
 
   @override
@@ -97,7 +99,6 @@ class CategoryMobilePage extends StatefulWidget {
 class _CategoryMobilePageState extends State<CategoryMobilePage> {
   @override
   Widget build(BuildContext context) {
-    print(widget.eventsList);
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -126,7 +127,10 @@ class _CategoryMobilePageState extends State<CategoryMobilePage> {
                 ),
               ],
             ),
-            const CategoryTableWidget(),
+            CategoryTableWidget(
+              eventsList: widget.eventsList,
+              userDoc: widget.userDoc,
+            ),
             SizedBox(
               height: MediaQuery.of(context).size.height * .05,
             ),
