@@ -1,12 +1,17 @@
+import 'dart:html';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../responsive_layout_widget.dart';
 
 import '../../controllers/global_controller.dart' as global;
 import '../../controllers/user_controller.dart';
+import '../../controllers/event_controller.dart';
 
 import '../../pages/event_detail_page.dart';
+import '../../pages/landing_page.dart';
 
 class CategoryTableWidget extends StatefulWidget {
   final Map userDoc;
@@ -211,7 +216,7 @@ class _CategoryTableMobileWidgetState extends State<CategoryTableMobileWidget> {
                       alignment: Alignment.center,
                       child: TextButton(
                         onPressed: () {
-                          Navigator.pushAndRemoveUntil(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (BuildContext context) =>
@@ -220,37 +225,150 @@ class _CategoryTableMobileWidgetState extends State<CategoryTableMobileWidget> {
                                 userDoc: widget.userDoc,
                               ),
                             ),
-                            (route) => false,
                           );
                         },
                         child: const Text(
                           'detail',
                           style: TextStyle(
+                            decoration: TextDecoration.underline,
                             color: global.primaryColor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      // const Text(
-                      //   'detail',
-                      //   style: TextStyle(
-                      //     color: Colors.white,
-                      //     fontWeight: FontWeight.bold,
-                      //   ),
-                      // ),
                     ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * .1,
-                      height: MediaQuery.of(context).size.height * .05,
-                      alignment: Alignment.center,
-                      child: const Text(
-                        'join',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                    (widget.eventsList[index]['host'] == widget.userDoc['uid'])
+                        ? Container()
+                        : (widget.eventsList[index]['rsvpList']
+                                .contains(widget.userDoc['uid']))
+                            ? Container(
+                                width: MediaQuery.of(context).size.width * .1,
+                                height:
+                                    MediaQuery.of(context).size.height * .05,
+                                alignment: Alignment.center,
+                                child: TextButton(
+                                  onPressed: () {
+                                    EventController.instance
+                                        .updateEventRSVP(widget.userDoc,
+                                            widget.eventsList[index])
+                                        .then((updateEventRsvpResult) {
+                                      UserController.instance
+                                          .updateMyEvent(widget.userDoc['uid'],
+                                              widget.eventsList[index]['id'])
+                                          .then((result) {
+                                        if (result) {
+                                          Get.snackbar(
+                                            'Update successful',
+                                            'You have been removed from RSVP list',
+                                            backgroundColor:
+                                                global.secondaryColor,
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            titleText: const Text(
+                                              'RSVP List Updated',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          );
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  const LandingPage(),
+                                            ),
+                                            (route) => false,
+                                          );
+                                        } else {
+                                          Get.snackbar(
+                                            'Update unsuccessful',
+                                            'Failed to update list',
+                                            backgroundColor: Colors.red,
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            titleText: const Text(
+                                              'RSVP List Update Failed',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      });
+                                    });
+                                  },
+                                  child: const Text(
+                                    'cancel',
+                                    style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      color: global.secondaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                width: MediaQuery.of(context).size.width * .1,
+                                height:
+                                    MediaQuery.of(context).size.height * .05,
+                                alignment: Alignment.center,
+                                child: TextButton(
+                                  onPressed: () {
+                                    EventController.instance
+                                        .updateEventRSVP(widget.userDoc,
+                                            widget.eventsList[index])
+                                        .then((updateEventRsvpResult) {
+                                      UserController.instance
+                                          .updateMyEvent(widget.userDoc['uid'],
+                                              widget.eventsList[index]['id'])
+                                          .then((result) {
+                                        if (result) {
+                                          Get.snackbar(
+                                            'Update successful',
+                                            'You have been added RSVP list',
+                                            backgroundColor:
+                                                global.primaryColor,
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            titleText: const Text(
+                                              'RSVP List Updated',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          );
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  const LandingPage(),
+                                            ),
+                                            (route) => false,
+                                          );
+                                        } else {
+                                          Get.snackbar(
+                                            'Update unsuccessful',
+                                            'Failed to update list',
+                                            backgroundColor: Colors.red,
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            titleText: const Text(
+                                              'RSVP List Update Failed',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      });
+                                    });
+                                  },
+                                  child: const Text(
+                                    'RSVP',
+                                    style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      color: global.primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
                   ],
                 );
                 // return ListTile(
