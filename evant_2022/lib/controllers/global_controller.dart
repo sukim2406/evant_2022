@@ -18,6 +18,7 @@ const List<String> categoryStrings = [
   'Study',
   'Gaming',
   'Social',
+  'Dining',
 ];
 
 const List<String> statusStrings = [
@@ -34,15 +35,23 @@ const List<Map> categories = <Map>[
   },
   {
     'category': 'Study',
-    'img': 'img/category_sports.jpg',
+    'img': 'img/category_study.jpg',
   },
   {
     'category': 'Gaming',
-    'img': 'img/category_sports.jpg',
+    'img': 'img/category_gaming.jpg',
   },
   {
     'category': 'Social',
-    'img': 'img/category_sports.jpg',
+    'img': 'img/category_social.png',
+  },
+  {
+    'category': 'Dining',
+    'img': 'img/category_dining.jpg',
+  },
+  {
+    'category': 'Etc',
+    'img': 'img/category_etc.jpg',
   },
 ];
 

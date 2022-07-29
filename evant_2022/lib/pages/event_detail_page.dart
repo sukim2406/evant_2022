@@ -605,25 +605,6 @@ class _EventDetailMobilePageState extends State<EventDetailMobilePage> {
                                       txtColor: Colors.white,
                                     )
                                   : Container(),
-                              // RoundedBtnWidget(
-                              //   height:
-                              //       MediaQuery.of(context).size.height * .05,
-                              //   width: MediaQuery.of(context).size.width * .3,
-                              //   func: () {
-                              //     print('Im going!');
-                              //   },
-                              //   label: (widget.amIHost())
-                              //       ? 'CANCEL EVENT'
-                              //       : (widget.amIAttending())
-                              //           ? 'CANCEL RSVP'
-                              //           : 'JOIN',
-                              //   btnColor: (widget.amIHost())
-                              //       ? Colors.redAccent
-                              //       : (widget.amIAttending())
-                              //           ? Colors.redAccent
-                              //           : global.primaryColor,
-                              //   txtColor: Colors.white,
-                              // ),
                             ],
                           ),
                         ),

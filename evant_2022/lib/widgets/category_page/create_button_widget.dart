@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../controllers/global_controller.dart' as global;
 
 import '../../widgets/responsive_layout_widget.dart';
 import '../../widgets/rounded_btn_widget.dart';
 
+import '../../pages/new_event_page.dart';
+
 class CreateButtonWidget extends StatelessWidget {
-  const CreateButtonWidget({Key? key}) : super(key: key);
+  final Map userDoc;
+  const CreateButtonWidget({
+    Key? key,
+    required this.userDoc,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const ResponsiveLayoutWidget(
-      mobileVer: CreateButtonMobileWidget(),
+    return ResponsiveLayoutWidget(
+      mobileVer: CreateButtonMobileWidget(
+        userDoc: userDoc,
+      ),
     );
   }
 }
@@ -20,7 +29,11 @@ class CreateButtonWidget extends StatelessWidget {
 // --------------------- MOBILE ----------------------- //
 
 class CreateButtonMobileWidget extends StatefulWidget {
-  const CreateButtonMobileWidget({Key? key}) : super(key: key);
+  final Map userDoc;
+  const CreateButtonMobileWidget({
+    Key? key,
+    required this.userDoc,
+  }) : super(key: key);
 
   @override
   State<CreateButtonMobileWidget> createState() =>
@@ -50,7 +63,20 @@ class _CreateButtonMobileWidgetState extends State<CreateButtonMobileWidget> {
           RoundedBtnWidget(
             height: MediaQuery.of(context).size.height * .05,
             width: MediaQuery.of(context).size.width * .2,
-            func: () {},
+            func: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => NewEventPage(
+                    userDoc: widget.userDoc,
+                    point: LatLng(
+                      widget.userDoc['homeground']['lat'],
+                      widget.userDoc['homeground']['lng'],
+                    ),
+                  ),
+                ),
+              );
+            },
             label: 'CREATE',
             btnColor: global.primaryColor,
             txtColor: Colors.white,

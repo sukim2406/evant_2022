@@ -134,7 +134,9 @@ class _CategoryMobilePageState extends State<CategoryMobilePage> {
             SizedBox(
               height: MediaQuery.of(context).size.height * .05,
             ),
-            const CreateButtonWidget(),
+            CreateButtonWidget(
+              userDoc: widget.userDoc,
+            ),
           ],
         ),
       ),
