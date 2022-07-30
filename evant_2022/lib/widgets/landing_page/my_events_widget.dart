@@ -7,6 +7,8 @@ import '../../controllers/user_controller.dart';
 
 import '../../widgets/responsive_layout_widget.dart';
 
+import '../../pages/event_detail_page.dart';
+
 class MyEventsWidget extends StatefulWidget {
   final Map userDoc;
   const MyEventsWidget({
@@ -68,6 +70,7 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
       mobileVer: MyEventsMobileWidget(
         controller: scrollController,
         myEvents: myEvents,
+        userDoc: widget.userDoc,
       ),
       tabeltVer: MyEventsTabletWidget(
         controller: scrollController,
@@ -79,12 +82,14 @@ class _MyEventsWidgetState extends State<MyEventsWidget> {
 // -------------------------- MOBILE ------------------------ //
 
 class MyEventsMobileWidget extends StatefulWidget {
+  final Map userDoc;
   final List myEvents;
   final ScrollController controller;
   const MyEventsMobileWidget({
     Key? key,
     required this.controller,
     required this.myEvents,
+    required this.userDoc,
   }) : super(key: key);
 
   @override
@@ -117,62 +122,86 @@ class _MyEventsMobileWidgetState extends State<MyEventsMobileWidget> {
             ),
             color: Color.fromRGBO(82, 82, 82, .5),
           ),
-          child: ListView.separated(
-            controller: widget.controller,
-            padding: const EdgeInsets.all(8),
-            itemCount: widget.myEvents.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                // leading: Text(widget.myEvents[index]['host']),
-                leading: SizedBox(
-                  width: MediaQuery.of(context).size.width * .2,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.grey,
-                        backgroundImage: NetworkImage(
-                          widget.myEvents[index]['hostUrl'],
-                        ),
-                      ),
-                      Text(
-                        widget.myEvents[index]['hostScreenName'],
-                      ),
-                    ],
+          child: (widget.myEvents.length == 0)
+              ? const Center(
+                  child: Text(
+                    'Feeling bored? Join / Create an Evant!',
                   ),
+                )
+              : ListView.separated(
+                  controller: widget.controller,
+                  padding: const EdgeInsets.all(8),
+                  itemCount: widget.myEvents.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => EventDetailPage(
+                              eventData: widget.myEvents[index],
+                              userDoc: widget.userDoc,
+                            ),
+                          ),
+                        );
+                      },
+                      child: ListTile(
+                        // leading: Text(widget.myEvents[index]['host']),
+                        leading: SizedBox(
+                          width: MediaQuery.of(context).size.width * .2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: Colors.grey,
+                                backgroundImage: NetworkImage(
+                                  widget.myEvents[index]['hostUrl'],
+                                ),
+                              ),
+                              Text(
+                                widget.myEvents[index]['hostScreenName'],
+                              ),
+                            ],
+                          ),
+                        ),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(widget.myEvents[index]['title']),
+                            Text(
+                              '${widget.myEvents[index]['rsvpList'].length} / ${widget.myEvents[index]['max']}',
+                            ),
+                            Text(widget.myEvents[index]['status']),
+                            // Text(
+                            //   widget.myEvents[index]['time']['start']
+                            //       .toDate()
+                            //       .toString()
+                            //       .substring(5, 16),
+                            // ),
+                            // Text(
+                            //   widget.myEvents[index]['time']['end']
+                            //       .toDate()
+                            //       .toString()
+                            //       .substring(5, 16),
+                            // ),
+                          ],
+                        ),
+                        // subtitle: Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //   children: [
+                        //     Text(
+                        //       '${widget.myEvents[index]['rsvpList'].length} / ${widget.myEvents[index]['max']}',
+                        //     ),
+                        //     Text(widget.myEvents[index]['status']),
+                        //   ],
+                        // ),
+                        trailing: Text(widget.myEvents[index]['category']),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, index) =>
+                      const Divider(),
                 ),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(widget.myEvents[index]['title']),
-                    Text(
-                      widget.myEvents[index]['time']['start']
-                          .toDate()
-                          .toString()
-                          .substring(5, 16),
-                    ),
-                    Text(
-                      widget.myEvents[index]['time']['end']
-                          .toDate()
-                          .toString()
-                          .substring(5, 16),
-                    ),
-                  ],
-                ),
-                subtitle: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      '${widget.myEvents[index]['rsvpList'].length} / ${widget.myEvents[index]['max']}',
-                    ),
-                    Text(widget.myEvents[index]['status']),
-                  ],
-                ),
-                trailing: Text(widget.myEvents[index]['category']),
-              );
-            },
-            separatorBuilder: (BuildContext context, index) => const Divider(),
-          ),
         ),
       ],
     );

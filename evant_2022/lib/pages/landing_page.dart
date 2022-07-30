@@ -199,14 +199,6 @@ class _LandingTabletPageState extends State<LandingTabletPage> {
                 Column(
                   children: [
                     const WelcomeMessageWidget(),
-                    // SizedBox(
-                    //   width: MediaQuery.of(context).size.width * .65,
-                    //   height: MediaQuery.of(context).size.height * .45,
-                    //   child: MapScreenWidget(
-                    //     initLat: initLat,
-                    //     initLng: initLng,
-                    //   ),
-                    // ),
                     SearchCategoryWidget(
                       userDoc: widget.userData,
                     ),

@@ -184,6 +184,7 @@ class AuthController extends GetxController {
                     },
                     'greetMsg': 'Welcome to Evant!',
                     'following': [],
+                    'myEvents': [],
                     'stats': {
                       'hosted': 0,
                       'attended': 0,
