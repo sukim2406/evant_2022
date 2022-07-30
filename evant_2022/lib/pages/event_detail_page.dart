@@ -7,6 +7,7 @@ import '../widgets/rounded_btn_widget.dart';
 import '../widgets/event_detail_page/attendance_widget.dart';
 import '../widgets/event_detail_page/event_map_widget.dart';
 import '../widgets/event_detail_page/bottom_app_bar.dart';
+import '../widgets/event_detail_page/event_details_widget.dart';
 
 import '../controllers/global_controller.dart' as global;
 import '../controllers/event_controller.dart';
@@ -71,13 +72,64 @@ class _EventDetailPageState extends State<EventDetailPage> {
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayoutWidget(
-      mobileVer: EventDetailMobilePage(
+      mobileVer: EventDetailMobile2Page(
         eventData: widget.eventData,
         userDoc: widget.userDoc,
         amIAttending: amIAttending,
-        getScreenNameFromUid: getScreenNameFromUid,
+        // getScreenNameFromUid: getScreenNameFromUid,
         amIHost: amIHost,
         isEventFull: isEventFull,
+      ),
+    );
+  }
+}
+
+// ----------------NEW-------------------//
+class EventDetailMobile2Page extends StatefulWidget {
+  final Function() isEventFull;
+  final Function() amIHost;
+  final Function() amIAttending;
+  final Map userDoc;
+  final Map eventData;
+
+  const EventDetailMobile2Page({
+    Key? key,
+    required this.amIAttending,
+    required this.amIHost,
+    required this.isEventFull,
+    required this.eventData,
+    required this.userDoc,
+  }) : super(key: key);
+
+  @override
+  State<EventDetailMobile2Page> createState() => _EventDetailMobile2PageState();
+}
+
+class _EventDetailMobile2PageState extends State<EventDetailMobile2Page> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        color: Colors.white,
+        child: Column(
+          children: [
+            AppBarWidget(
+              profileUrl: widget.userDoc['profilePicture'],
+            ),
+            EventDetailsWidget(
+              eventData: widget.eventData,
+            ),
+            BottomAppBarWidget(
+              userDoc: widget.userDoc,
+              eventData: widget.eventData,
+              amIHost: widget.amIHost,
+              isEventFull: widget.isEventFull,
+              amIAttending: widget.amIAttending,
+            ),
+          ],
+        ),
       ),
     );
   }
