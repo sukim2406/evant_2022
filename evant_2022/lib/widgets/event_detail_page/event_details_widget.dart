@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/responsive_layout_widget.dart';
 
+import '../../controllers/global_controller.dart' as global;
+
 class EventDetailsWidget extends StatefulWidget {
   final Map eventData;
   const EventDetailsWidget({
@@ -41,11 +43,34 @@ class EventDetailsMobileWidget extends StatefulWidget {
 class _EventDetailsMobileWidgetState extends State<EventDetailsMobileWidget> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: MediaQuery.of(context).size.width * .9,
       height: MediaQuery.of(context).size.height * .8,
+      decoration: BoxDecoration(
+        color: global.secondaryColor,
+        border: Border.all(),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(
+            20,
+          ),
+        ),
+      ),
       child: SingleChildScrollView(
-        child: Column(),
+        child: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .02,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .5,
+              height: MediaQuery.of(context).size.height * .3,
+              child: Image.network(
+                widget.eventData['eventImage'],
+                fit: BoxFit.contain,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

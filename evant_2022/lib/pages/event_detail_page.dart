@@ -121,13 +121,13 @@ class _EventDetailMobile2PageState extends State<EventDetailMobile2Page> {
             EventDetailsWidget(
               eventData: widget.eventData,
             ),
-            BottomAppBarWidget(
-              userDoc: widget.userDoc,
-              eventData: widget.eventData,
-              amIHost: widget.amIHost,
-              isEventFull: widget.isEventFull,
-              amIAttending: widget.amIAttending,
-            ),
+            // BottomAppBarWidget(
+            //   userDoc: widget.userDoc,
+            //   eventData: widget.eventData,
+            //   amIHost: widget.amIHost,
+            //   isEventFull: widget.isEventFull,
+            //   amIAttending: widget.amIAttending,
+            // ),
           ],
         ),
       ),
