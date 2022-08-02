@@ -8,6 +8,7 @@ import '../widgets/event_detail_page/attendance_widget.dart';
 import '../widgets/event_detail_page/event_map_widget.dart';
 import '../widgets/event_detail_page/bottom_app_bar.dart';
 import '../widgets/event_detail_page/event_details_widget.dart';
+import '../widgets/event_detail_page/bottom_btns_widget.dart';
 
 import '../controllers/global_controller.dart' as global;
 import '../controllers/event_controller.dart';
@@ -128,6 +129,10 @@ class _EventDetailMobile2PageState extends State<EventDetailMobile2Page> {
             //   isEventFull: widget.isEventFull,
             //   amIAttending: widget.amIAttending,
             // ),
+            BottomBtnsWidget(
+              userDoc: widget.userDoc,
+              eventData: widget.eventData,
+            ),
           ],
         ),
       ),
