@@ -5,12 +5,33 @@ import '../../widgets/responsive_layout_widget.dart';
 import '../../controllers/global_controller.dart' as global;
 
 import '../../widgets/event_detail_page/event_map_widget.dart';
+import '../../widgets/event_detail_page/attendance_widget.dart';
 
 class EventDetailsWidget extends StatefulWidget {
+  final bool amIhost;
   final Map eventData;
+  final Map userDoc;
+  final TextEditingController titleController;
+  final TextEditingController descriptionController;
+  final TextEditingController categoryController;
+  final TextEditingController attendanceController;
+  final TextEditingController statusController;
+  final TextEditingController maxController;
+  final Function(String) setNewCategory;
+  final Function(String) setNewStatus;
   const EventDetailsWidget({
     Key? key,
     required this.eventData,
+    required this.userDoc,
+    required this.titleController,
+    required this.descriptionController,
+    required this.categoryController,
+    required this.attendanceController,
+    required this.statusController,
+    required this.maxController,
+    required this.amIhost,
+    required this.setNewCategory,
+    required this.setNewStatus,
   }) : super(key: key);
 
   @override
@@ -18,41 +39,21 @@ class EventDetailsWidget extends StatefulWidget {
 }
 
 class _EventDetailsWidgetState extends State<EventDetailsWidget> {
-  late TextEditingController titleController;
-  late TextEditingController descriptionController;
-  late TextEditingController categoryController;
-  late TextEditingController attendanceController;
-  late TextEditingController statusController;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-
-    titleController = TextEditingController();
-    descriptionController = TextEditingController();
-    categoryController = TextEditingController();
-    attendanceController = TextEditingController();
-    statusController = TextEditingController();
-    setState(() {
-      titleController.text = widget.eventData['title'];
-      descriptionController.text = widget.eventData['description'];
-      categoryController.text = widget.eventData['category'];
-      attendanceController.text =
-          '${widget.eventData['rsvpList'].length} / ${widget.eventData['max']}';
-      statusController.text = widget.eventData['status'];
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayoutWidget(
       mobileVer: EventDetailsMobileWidget(
         eventData: widget.eventData,
-        titleController: titleController,
-        descriptionContoller: descriptionController,
-        categoryController: categoryController,
-        attendanceController: attendanceController,
-        statusController: statusController,
+        titleController: widget.titleController,
+        descriptionContoller: widget.descriptionController,
+        categoryController: widget.categoryController,
+        attendanceController: widget.attendanceController,
+        statusController: widget.statusController,
+        maxController: widget.maxController,
+        userDoc: widget.userDoc,
+        amIhost: widget.amIhost,
+        setNewCategory: widget.setNewCategory,
+        setNewStatus: widget.setNewStatus,
       ),
     );
   }
@@ -61,12 +62,17 @@ class _EventDetailsWidgetState extends State<EventDetailsWidget> {
 // -------------------------------------- MOBILE ------------------------------------ //
 
 class EventDetailsMobileWidget extends StatefulWidget {
+  final bool amIhost;
   final TextEditingController titleController;
   final TextEditingController descriptionContoller;
   final TextEditingController categoryController;
   final TextEditingController attendanceController;
   final TextEditingController statusController;
+  final TextEditingController maxController;
   final Map eventData;
+  final Map userDoc;
+  final Function(String) setNewCategory;
+  final Function(String) setNewStatus;
   const EventDetailsMobileWidget({
     Key? key,
     required this.eventData,
@@ -75,6 +81,11 @@ class EventDetailsMobileWidget extends StatefulWidget {
     required this.categoryController,
     required this.attendanceController,
     required this.statusController,
+    required this.maxController,
+    required this.userDoc,
+    required this.amIhost,
+    required this.setNewCategory,
+    required this.setNewStatus,
   }) : super(key: key);
 
   @override
@@ -119,7 +130,7 @@ class _EventDetailsMobileWidgetState extends State<EventDetailsMobileWidget> {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * .01,
+              height: MediaQuery.of(context).size.height * .02,
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width * .9,
@@ -137,9 +148,12 @@ class _EventDetailsMobileWidgetState extends State<EventDetailsMobileWidget> {
                     ),
                   ),
                   SizedBox(
+                    height: MediaQuery.of(context).size.height * .01,
+                  ),
+                  SizedBox(
                     width: MediaQuery.of(context).size.width * .6,
                     child: TextField(
-                      enabled: false,
+                      enabled: widget.amIhost,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -150,7 +164,7 @@ class _EventDetailsMobileWidgetState extends State<EventDetailsMobileWidget> {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * .01,
+              height: MediaQuery.of(context).size.height * .02,
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width * .9,
@@ -168,9 +182,12 @@ class _EventDetailsMobileWidgetState extends State<EventDetailsMobileWidget> {
                     ),
                   ),
                   SizedBox(
+                    height: MediaQuery.of(context).size.height * .01,
+                  ),
+                  SizedBox(
                     width: MediaQuery.of(context).size.width * .6,
                     child: TextField(
-                      enabled: false,
+                      enabled: widget.amIhost,
                       keyboardType: TextInputType.multiline,
                       maxLines: 3,
                       decoration: const InputDecoration(
@@ -183,7 +200,7 @@ class _EventDetailsMobileWidgetState extends State<EventDetailsMobileWidget> {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * .01,
+              height: MediaQuery.of(context).size.height * .02,
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width * .9,
@@ -201,20 +218,38 @@ class _EventDetailsMobileWidgetState extends State<EventDetailsMobileWidget> {
                     ),
                   ),
                   SizedBox(
+                    height: MediaQuery.of(context).size.height * .01,
+                  ),
+                  SizedBox(
                     width: MediaQuery.of(context).size.width * .6,
-                    child: TextField(
-                      enabled: false,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                    child: DropdownButton<String>(
+                      value: widget.categoryController.text,
+                      icon: const Icon(Icons.arrow_downward),
+                      elevation: 16,
+                      style: const TextStyle(color: global.secondaryColor),
+                      underline: Container(
+                        height: 2,
+                        color: global.secondaryColor,
                       ),
-                      controller: widget.categoryController,
+                      items: global.categoryStrings
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem(
+                          child: Text(value),
+                          value: value,
+                        );
+                      }).toList(),
+                      onChanged: (widget.amIhost)
+                          ? (String? newValue) {
+                              widget.setNewCategory(newValue!);
+                            }
+                          : null,
                     ),
                   ),
                 ],
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * .01,
+              height: MediaQuery.of(context).size.height * .02,
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width * .9,
@@ -232,20 +267,20 @@ class _EventDetailsMobileWidgetState extends State<EventDetailsMobileWidget> {
                     ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * .6,
-                    child: TextField(
-                      enabled: false,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                      controller: widget.attendanceController,
-                    ),
+                    height: MediaQuery.of(context).size.height * .01,
+                  ),
+                  AttendanceWidget(
+                    userDoc: widget.userDoc,
+                    eventData: widget.eventData,
+                    attendanceController: widget.attendanceController,
+                    maxController: widget.maxController,
+                    amIHost: widget.amIhost,
                   ),
                 ],
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * .01,
+              height: MediaQuery.of(context).size.height * .02,
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width * .9,
@@ -263,25 +298,44 @@ class _EventDetailsMobileWidgetState extends State<EventDetailsMobileWidget> {
                     ),
                   ),
                   SizedBox(
+                    height: MediaQuery.of(context).size.height * .01,
+                  ),
+                  SizedBox(
                     width: MediaQuery.of(context).size.width * .6,
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                    child: DropdownButton<String>(
+                      value: widget.statusController.text,
+                      icon: const Icon(Icons.arrow_downward),
+                      elevation: 16,
+                      style: const TextStyle(color: global.secondaryColor),
+                      underline: Container(
+                        height: 2,
+                        color: global.secondaryColor,
                       ),
-                      controller: widget.statusController,
+                      items: global.statusStrings
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem(
+                          child: Text(value),
+                          value: value,
+                        );
+                      }).toList(),
+                      onChanged: (widget.amIhost)
+                          ? (String? newValue) {
+                              widget.setNewStatus(newValue!);
+                            }
+                          : null,
                     ),
                   ),
                 ],
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * .01,
+              height: MediaQuery.of(context).size.height * .02,
             ),
             EventMapWidget(
               eventData: widget.eventData,
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * .01,
+              height: MediaQuery.of(context).size.height * .02,
             ),
           ],
         ),

@@ -30,6 +30,13 @@ class EventDetailPage extends StatefulWidget {
 }
 
 class _EventDetailPageState extends State<EventDetailPage> {
+  late TextEditingController titleController;
+  late TextEditingController descriptionController;
+  late TextEditingController categoryController;
+  late TextEditingController attendanceController;
+  late TextEditingController maxController;
+  late TextEditingController statusController;
+
   bool amIHost() {
     bool result = false;
 
@@ -70,6 +77,39 @@ class _EventDetailPageState extends State<EventDetailPage> {
     return screenName;
   }
 
+  setNewCategory(newCategory) {
+    setState(() {
+      categoryController.text = newCategory;
+    });
+  }
+
+  setNewStatus(newStatus) {
+    setState(() {
+      statusController.text = newStatus;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    titleController = TextEditingController();
+    descriptionController = TextEditingController();
+    categoryController = TextEditingController();
+    attendanceController = TextEditingController();
+    statusController = TextEditingController();
+    maxController = TextEditingController();
+    setState(() {
+      titleController.text = widget.eventData['title'];
+      descriptionController.text = widget.eventData['description'];
+      categoryController.text = widget.eventData['category'];
+      maxController.text = widget.eventData['max'];
+      attendanceController.text =
+          widget.eventData['rsvpList'].length.toString();
+      statusController.text = widget.eventData['status'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayoutWidget(
@@ -80,6 +120,14 @@ class _EventDetailPageState extends State<EventDetailPage> {
         // getScreenNameFromUid: getScreenNameFromUid,
         amIHost: amIHost,
         isEventFull: isEventFull,
+        titleController: titleController,
+        descriptionController: descriptionController,
+        categoryController: categoryController,
+        attendanceController: attendanceController,
+        maxController: maxController,
+        statusController: statusController,
+        setNewCategory: setNewCategory,
+        setNewStatus: setNewStatus,
       ),
     );
   }
@@ -90,8 +138,16 @@ class EventDetailMobile2Page extends StatefulWidget {
   final Function() isEventFull;
   final Function() amIHost;
   final Function() amIAttending;
+  final Function(String) setNewCategory;
+  final Function(String) setNewStatus;
   final Map userDoc;
   final Map eventData;
+  final TextEditingController titleController;
+  final TextEditingController descriptionController;
+  final TextEditingController categoryController;
+  final TextEditingController attendanceController;
+  final TextEditingController statusController;
+  final TextEditingController maxController;
 
   const EventDetailMobile2Page({
     Key? key,
@@ -100,6 +156,14 @@ class EventDetailMobile2Page extends StatefulWidget {
     required this.isEventFull,
     required this.eventData,
     required this.userDoc,
+    required this.titleController,
+    required this.descriptionController,
+    required this.categoryController,
+    required this.attendanceController,
+    required this.statusController,
+    required this.maxController,
+    required this.setNewCategory,
+    required this.setNewStatus,
   }) : super(key: key);
 
   @override
@@ -121,14 +185,17 @@ class _EventDetailMobile2PageState extends State<EventDetailMobile2Page> {
             ),
             EventDetailsWidget(
               eventData: widget.eventData,
+              userDoc: widget.userDoc,
+              titleController: widget.titleController,
+              descriptionController: widget.descriptionController,
+              categoryController: widget.categoryController,
+              attendanceController: widget.attendanceController,
+              statusController: widget.statusController,
+              maxController: widget.maxController,
+              amIhost: widget.amIHost(),
+              setNewCategory: widget.setNewCategory,
+              setNewStatus: widget.setNewStatus,
             ),
-            // BottomAppBarWidget(
-            //   userDoc: widget.userDoc,
-            //   eventData: widget.eventData,
-            //   amIHost: widget.amIHost,
-            //   isEventFull: widget.isEventFull,
-            //   amIAttending: widget.amIAttending,
-            // ),
             BottomBtnsWidget(
               userDoc: widget.userDoc,
               eventData: widget.eventData,
@@ -295,10 +362,10 @@ class _EventDetailMobilePageState extends State<EventDetailMobilePage> {
                                   ),
                                 ),
                               ),
-                              AttendanceWidget(
-                                userDoc: widget.userDoc,
-                                eventData: widget.eventData,
-                              ),
+                              // AttendanceWidget(
+                              //   userDoc: widget.userDoc,
+                              //   eventData: widget.eventData,
+                              // ),
                               SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * .03,
