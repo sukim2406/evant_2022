@@ -158,4 +158,20 @@ class EventController extends GetxController {
       return result;
     }
   }
+
+  Future updateEvent(eventId, title, description, category, max, status) async {
+    bool result = false;
+    await firestore.collection('events').doc(eventId).update(
+      {
+        'title': title,
+        'description': description,
+        'category': category,
+        'max': max,
+        'status': status,
+      },
+    ).then((value) {
+      result = true;
+    });
+    return result; 
+  }
 }

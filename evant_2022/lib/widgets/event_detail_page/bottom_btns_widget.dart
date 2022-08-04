@@ -5,14 +5,27 @@ import '../../widgets/responsive_layout_widget.dart';
 import '../../widgets/rounded_btn_widget.dart';
 
 import '../../controllers/global_controller.dart' as global;
+import '../../controllers/event_controller.dart';
 
 class BottomBtnsWidget extends StatefulWidget {
+  final TextEditingController titleController;
+  final TextEditingController descriptionController;
+  final TextEditingController categoryController;
+  final TextEditingController attendanceController;
+  final TextEditingController maxController;
+  final TextEditingController statusController;
   final Map userDoc;
   final Map eventData;
   const BottomBtnsWidget({
     Key? key,
     required this.userDoc,
     required this.eventData,
+    required this.titleController,
+    required this.attendanceController,
+    required this.categoryController,
+    required this.descriptionController,
+    required this.maxController,
+    required this.statusController,
   }) : super(key: key);
 
   @override
@@ -26,6 +39,12 @@ class _BottomBtnsWidgetState extends State<BottomBtnsWidget> {
       mobileVer: BottomBtnsMobileWidget(
         userDoc: widget.userDoc,
         eventData: widget.eventData,
+        descriptionController: widget.descriptionController,
+        categoryController: widget.categoryController,
+        attendanceController: widget.attendanceController,
+        maxController: widget.maxController,
+        statusController: widget.statusController,
+        titleController: widget.titleController,
       ),
     );
   }
@@ -34,12 +53,24 @@ class _BottomBtnsWidgetState extends State<BottomBtnsWidget> {
 // ------------------------------- MOBILE ----------------------------- //
 
 class BottomBtnsMobileWidget extends StatefulWidget {
+  final TextEditingController titleController;
+  final TextEditingController descriptionController;
+  final TextEditingController categoryController;
+  final TextEditingController attendanceController;
+  final TextEditingController maxController;
+  final TextEditingController statusController;
   final Map userDoc;
   final Map eventData;
   const BottomBtnsMobileWidget({
     Key? key,
     required this.userDoc,
     required this.eventData,
+    required this.titleController,
+    required this.attendanceController,
+    required this.categoryController,
+    required this.descriptionController,
+    required this.maxController,
+    required this.statusController,
   }) : super(key: key);
 
   @override
@@ -141,6 +172,18 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                             TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
+                                EventController.instance
+                                    .updateEvent(
+                                  widget.eventData['id'],
+                                  widget.titleController.text,
+                                  widget.descriptionController.text,
+                                  widget.categoryController.text,
+                                  widget.maxController.text,
+                                  widget.statusController.text,
+                                )
+                                    .then((result) {
+                                  print(result);
+                                });
                               },
                               child: const Text(
                                 'Save',

@@ -24,7 +24,7 @@ const List<String> categoryStrings = [
 const List<String> statusStrings = [
   'Open',
   'Joinable',
-  'In progress',
+  'In session',
   'Closed',
 ];
 

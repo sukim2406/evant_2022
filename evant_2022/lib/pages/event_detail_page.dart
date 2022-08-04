@@ -199,6 +199,12 @@ class _EventDetailMobile2PageState extends State<EventDetailMobile2Page> {
             BottomBtnsWidget(
               userDoc: widget.userDoc,
               eventData: widget.eventData,
+              titleController: widget.titleController,
+              descriptionController: widget.descriptionController,
+              categoryController: widget.categoryController,
+              attendanceController: widget.attendanceController,
+              maxController: widget.maxController,
+              statusController: widget.statusController,
             ),
           ],
         ),
