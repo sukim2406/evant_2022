@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 
 import '../../widgets/responsive_layout_widget.dart';
 import '../../widgets/rounded_btn_widget.dart';
 
 import '../../controllers/global_controller.dart' as global;
 import '../../controllers/event_controller.dart';
+import '../../controllers/user_controller.dart';
+
+import '../../pages/landing_page.dart';
 
 class BottomBtnsWidget extends StatefulWidget {
   final TextEditingController titleController;
@@ -107,7 +110,7 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                   func: () {
                     showDialog(
                       context: context,
-                      builder: (BuildContext context) {
+                      builder: (BuildContext dialogContext) {
                         return AlertDialog(
                           title: const Text('Delete event'),
                           content:
@@ -115,7 +118,7 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.pop(context);
+                                Navigator.pop(dialogContext);
                               },
                               child: const Text(
                                 'Cancel',
@@ -126,7 +129,26 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.pop(context);
+                                UserController.instance
+                                    .cancelEvent(
+                                  widget.eventData['id'],
+                                  widget.eventData['rsvpList'],
+                                )
+                                    .then((result) async {
+                                  await EventController.instance
+                                      .deleteEvent(widget.eventData['id'])
+                                      .then((deleteEventResult) {
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            const LandingPage(),
+                                      ),
+                                      (route) => false,
+                                    );
+                                  });
+                                });
+                                Navigator.pop(dialogContext);
                               },
                               child: const Text(
                                 'Delete',
@@ -153,14 +175,14 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                   func: () {
                     showDialog(
                       context: context,
-                      builder: (BuildContext context) {
+                      builder: (BuildContext dialogContext) {
                         return AlertDialog(
                           title: const Text('Save changes'),
                           content: const Text('Do you want to save Changes?'),
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.pop(context);
+                                Navigator.pop(dialogContext);
                               },
                               child: const Text(
                                 'Cancel',
@@ -171,19 +193,70 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.pop(context);
-                                EventController.instance
-                                    .updateEvent(
-                                  widget.eventData['id'],
-                                  widget.titleController.text,
-                                  widget.descriptionController.text,
-                                  widget.categoryController.text,
-                                  widget.maxController.text,
-                                  widget.statusController.text,
-                                )
-                                    .then((result) {
-                                  print(result);
-                                });
+                                if (widget.titleController.text.isEmpty) {
+                                  Get.snackbar(
+                                    'Title Error',
+                                    'Title cannot be empty',
+                                    backgroundColor: Colors.redAccent,
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    titleText: const Text(
+                                      'Title Error',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  );
+                                } else if (widget.eventData['rsvpList'].length >
+                                    int.parse(widget.maxController.text)) {
+                                  Get.snackbar(
+                                    'Max Attendance Error',
+                                    'Max attendance cannot be smaller then current attendance',
+                                    backgroundColor: Colors.redAccent,
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    titleText: const Text(
+                                      'Max Attendance Error',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  EventController.instance
+                                      .updateEvent(
+                                    widget.eventData['id'],
+                                    widget.titleController.text,
+                                    widget.descriptionController.text,
+                                    widget.categoryController.text,
+                                    widget.maxController.text,
+                                    widget.statusController.text,
+                                  )
+                                      .then((result) {
+                                    if (result) {
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const LandingPage(),
+                                        ),
+                                        (route) => false,
+                                      );
+                                    } else {
+                                      Get.snackbar(
+                                        'Event Update Error',
+                                        'Event update was unsuccessful',
+                                        backgroundColor: Colors.redAccent,
+                                        snackPosition: SnackPosition.BOTTOM,
+                                        titleText: const Text(
+                                          'Event Update Error',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  });
+                                }
+                                Navigator.pop(dialogContext);
                               },
                               child: const Text(
                                 'Save',
@@ -230,7 +303,7 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                         .contains(widget.userDoc['uid'])) {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) {
+                        builder: (BuildContext dialogContext) {
                           return AlertDialog(
                             title: const Text('Cancel RSVP'),
                             content:
@@ -238,7 +311,7 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  Navigator.pop(dialogContext);
                                 },
                                 child: const Text(
                                   'no',
@@ -249,7 +322,63 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  EventController.instance
+                                      .updateEventRSVP(
+                                          widget.userDoc, widget.eventData)
+                                      .then(
+                                    (updateEventRSVPResult) {
+                                      if (updateEventRSVPResult) {
+                                        UserController.instance
+                                            .updateMyEvent(
+                                          widget.userDoc['uid'],
+                                          widget.eventData['id'],
+                                        )
+                                            .then((updateMyEventResult) {
+                                          if (updateMyEventResult) {
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        const LandingPage(),
+                                              ),
+                                              (route) => false,
+                                            );
+                                          } else {
+                                            Get.snackbar(
+                                              'updateMyEvent Error',
+                                              'Event update was unsuccessful',
+                                              backgroundColor: Colors.redAccent,
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
+                                              titleText: const Text(
+                                                'updateMyEvent Error',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            );
+                                            print('updateMyEvent error');
+                                          }
+                                        });
+                                      } else {
+                                        Get.snackbar(
+                                          'updateEventRSVP Error',
+                                          'Event update was unsuccessful',
+                                          backgroundColor: Colors.redAccent,
+                                          snackPosition: SnackPosition.BOTTOM,
+                                          titleText: const Text(
+                                            'updateEventRSVP Error',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        );
+                                        print('updateEventRSVP error');
+                                      }
+                                    },
+                                  );
+                                  Navigator.pop(dialogContext);
                                 },
                                 child: const Text(
                                   'Cancel RSVP',
@@ -265,7 +394,7 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                     } else {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) {
+                        builder: (BuildContext dialogContext) {
                           return AlertDialog(
                             title: const Text('RSVP'),
                             content: const Text(
@@ -273,7 +402,7 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  Navigator.pop(dialogContext);
                                 },
                                 child: const Text(
                                   'Cancel',
@@ -284,7 +413,63 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  EventController.instance
+                                      .updateEventRSVP(
+                                          widget.userDoc, widget.eventData)
+                                      .then(
+                                    (updateEventRSVPResult) {
+                                      if (updateEventRSVPResult) {
+                                        UserController.instance
+                                            .updateMyEvent(
+                                          widget.userDoc['uid'],
+                                          widget.eventData['id'],
+                                        )
+                                            .then((updateMyEventResult) {
+                                          if (updateMyEventResult) {
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        const LandingPage(),
+                                              ),
+                                              (route) => false,
+                                            );
+                                          } else {
+                                            Get.snackbar(
+                                              'updateMyEvent Error',
+                                              'Event update was unsuccessful',
+                                              backgroundColor: Colors.redAccent,
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
+                                              titleText: const Text(
+                                                'updateMyEvent Error',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            );
+                                            print('updateMyEvent error');
+                                          }
+                                        });
+                                      } else {
+                                        Get.snackbar(
+                                          'updateEventRSVP Error',
+                                          'Event update was unsuccessful',
+                                          backgroundColor: Colors.redAccent,
+                                          snackPosition: SnackPosition.BOTTOM,
+                                          titleText: const Text(
+                                            'updateEventRSVP Error',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        );
+                                        print('updateEventRSVP error');
+                                      }
+                                    },
+                                  );
+                                  Navigator.pop(dialogContext);
                                 },
                                 child: const Text(
                                   'Attend',
