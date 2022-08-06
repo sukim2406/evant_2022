@@ -36,6 +36,22 @@ class _EventDetailPageState extends State<EventDetailPage> {
   late TextEditingController attendanceController;
   late TextEditingController maxController;
   late TextEditingController statusController;
+  late DateTime startTime;
+  late DateTime endTime;
+
+  void setStartTime(newStartTime) {
+    setState(() {
+      startTime = newStartTime;
+    });
+  }
+
+  void setEndTime(newEndTime) {
+    setState(
+      () {
+        endTime = newEndTime;
+      },
+    );
+  }
 
   bool amIHost() {
     bool result = false;
@@ -107,6 +123,8 @@ class _EventDetailPageState extends State<EventDetailPage> {
       attendanceController.text =
           widget.eventData['rsvpList'].length.toString();
       statusController.text = widget.eventData['status'];
+      endTime = widget.eventData['time']['end'].toDate();
+      startTime = widget.eventData['time']['start'].toDate();
     });
   }
 
@@ -128,6 +146,10 @@ class _EventDetailPageState extends State<EventDetailPage> {
         statusController: statusController,
         setNewCategory: setNewCategory,
         setNewStatus: setNewStatus,
+        setEndTime: setEndTime,
+        setStartTime: setStartTime,
+        startTime: startTime,
+        endTime: endTime,
       ),
     );
   }
@@ -148,6 +170,10 @@ class EventDetailMobile2Page extends StatefulWidget {
   final TextEditingController attendanceController;
   final TextEditingController statusController;
   final TextEditingController maxController;
+  final void Function(DateTime) setStartTime;
+  final void Function(DateTime) setEndTime;
+  final DateTime startTime;
+  final DateTime endTime;
 
   const EventDetailMobile2Page({
     Key? key,
@@ -164,6 +190,10 @@ class EventDetailMobile2Page extends StatefulWidget {
     required this.maxController,
     required this.setNewCategory,
     required this.setNewStatus,
+    required this.setEndTime,
+    required this.setStartTime,
+    required this.startTime,
+    required this.endTime,
   }) : super(key: key);
 
   @override
@@ -195,6 +225,10 @@ class _EventDetailMobile2PageState extends State<EventDetailMobile2Page> {
               amIhost: widget.amIHost(),
               setNewCategory: widget.setNewCategory,
               setNewStatus: widget.setNewStatus,
+              setEndTime: widget.setEndTime,
+              setStartTime: widget.setStartTime,
+              startTime: widget.startTime,
+              endTime: widget.endTime,
             ),
             BottomBtnsWidget(
               userDoc: widget.userDoc,
@@ -205,6 +239,8 @@ class _EventDetailMobile2PageState extends State<EventDetailMobile2Page> {
               attendanceController: widget.attendanceController,
               maxController: widget.maxController,
               statusController: widget.statusController,
+              startTime: widget.startTime,
+              endTime: widget.endTime,
             ),
           ],
         ),

@@ -17,6 +17,8 @@ class BottomBtnsWidget extends StatefulWidget {
   final TextEditingController attendanceController;
   final TextEditingController maxController;
   final TextEditingController statusController;
+  final DateTime startTime;
+  final DateTime endTime;
   final Map userDoc;
   final Map eventData;
   const BottomBtnsWidget({
@@ -29,6 +31,8 @@ class BottomBtnsWidget extends StatefulWidget {
     required this.descriptionController,
     required this.maxController,
     required this.statusController,
+    required this.startTime,
+    required this.endTime,
   }) : super(key: key);
 
   @override
@@ -48,6 +52,8 @@ class _BottomBtnsWidgetState extends State<BottomBtnsWidget> {
         maxController: widget.maxController,
         statusController: widget.statusController,
         titleController: widget.titleController,
+        startTime: widget.startTime,
+        endTime: widget.endTime,
       ),
     );
   }
@@ -62,6 +68,8 @@ class BottomBtnsMobileWidget extends StatefulWidget {
   final TextEditingController attendanceController;
   final TextEditingController maxController;
   final TextEditingController statusController;
+  final DateTime startTime;
+  final DateTime endTime;
   final Map userDoc;
   final Map eventData;
   const BottomBtnsMobileWidget({
@@ -74,6 +82,8 @@ class BottomBtnsMobileWidget extends StatefulWidget {
     required this.descriptionController,
     required this.maxController,
     required this.statusController,
+    required this.startTime,
+    required this.endTime,
   }) : super(key: key);
 
   @override
@@ -220,6 +230,21 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                                       ),
                                     ),
                                   );
+                                } else if (widget.startTime
+                                        .compareTo(widget.endTime) >
+                                    0) {
+                                  Get.snackbar(
+                                    'Event Time Error',
+                                    'Start time cannot be later then end time',
+                                    backgroundColor: Colors.redAccent,
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    titleText: const Text(
+                                      'Event Time Error',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  );
                                 } else {
                                   EventController.instance
                                       .updateEvent(
@@ -229,6 +254,8 @@ class _BottomBtnsMobileWidgetState extends State<BottomBtnsMobileWidget> {
                                     widget.categoryController.text,
                                     widget.maxController.text,
                                     widget.statusController.text,
+                                    widget.startTime,
+                                    widget.endTime,
                                   )
                                       .then((result) {
                                     if (result) {

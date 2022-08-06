@@ -286,6 +286,9 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * .05,
+                        ),
                         const Text(
                           'Category :   ',
                           style: TextStyle(
@@ -333,7 +336,13 @@ class _NewEventMobilePageState extends State<NewEventMobilePage> {
                             widget.setSelectedStatus(item.toString());
                           },
                         ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * .05,
+                        ),
                       ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .025,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

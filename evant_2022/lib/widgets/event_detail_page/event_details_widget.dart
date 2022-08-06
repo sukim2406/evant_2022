@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import '../../widgets/responsive_layout_widget.dart';
 
@@ -6,6 +7,7 @@ import '../../controllers/global_controller.dart' as global;
 
 import '../../widgets/event_detail_page/event_map_widget.dart';
 import '../../widgets/event_detail_page/attendance_widget.dart';
+import '../../widgets/boxed_textfield_widget.dart';
 
 class EventDetailsWidget extends StatefulWidget {
   final bool amIhost;
@@ -19,6 +21,10 @@ class EventDetailsWidget extends StatefulWidget {
   final TextEditingController maxController;
   final Function(String) setNewCategory;
   final Function(String) setNewStatus;
+  final void Function(DateTime) setStartTime;
+  final void Function(DateTime) setEndTime;
+  final DateTime startTime;
+  final DateTime endTime;
   const EventDetailsWidget({
     Key? key,
     required this.eventData,
@@ -32,6 +38,10 @@ class EventDetailsWidget extends StatefulWidget {
     required this.amIhost,
     required this.setNewCategory,
     required this.setNewStatus,
+    required this.setEndTime,
+    required this.setStartTime,
+    required this.startTime,
+    required this.endTime,
   }) : super(key: key);
 
   @override
@@ -54,6 +64,10 @@ class _EventDetailsWidgetState extends State<EventDetailsWidget> {
         amIhost: widget.amIhost,
         setNewCategory: widget.setNewCategory,
         setNewStatus: widget.setNewStatus,
+        setEndTime: widget.setEndTime,
+        setStartTime: widget.setStartTime,
+        startTime: widget.startTime,
+        endTime: widget.endTime,
       ),
     );
   }
@@ -73,6 +87,10 @@ class EventDetailsMobileWidget extends StatefulWidget {
   final Map userDoc;
   final Function(String) setNewCategory;
   final Function(String) setNewStatus;
+  final void Function(DateTime) setStartTime;
+  final void Function(DateTime) setEndTime;
+  final DateTime startTime;
+  final DateTime endTime;
   const EventDetailsMobileWidget({
     Key? key,
     required this.eventData,
@@ -86,6 +104,10 @@ class EventDetailsMobileWidget extends StatefulWidget {
     required this.amIhost,
     required this.setNewCategory,
     required this.setNewStatus,
+    required this.setEndTime,
+    required this.setStartTime,
+    required this.startTime,
+    required this.endTime,
   }) : super(key: key);
 
   @override
@@ -275,6 +297,94 @@ class _EventDetailsMobileWidgetState extends State<EventDetailsMobileWidget> {
                     attendanceController: widget.attendanceController,
                     maxController: widget.maxController,
                     amIHost: widget.amIhost,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .02,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .9,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .6,
+                    child: const Text(
+                      'Event Date & Time',
+                      style: TextStyle(
+                        color: global.secondaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .01,
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .6,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if (widget.amIhost) {
+                              DatePicker.showDateTimePicker(
+                                context,
+                                minTime: DateTime.now(),
+                                maxTime: DateTime(2030, 12, 31),
+                                onConfirm: (date) {
+                                  widget.setStartTime(date);
+                                },
+                              );
+                            }
+                          },
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * .27,
+                            child: TextField(
+                              enabled: false,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                              controller: TextEditingController(
+                                text: widget.startTime
+                                    .toString()
+                                    .substring(0, 19),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const Text(' to '),
+                        GestureDetector(
+                          onTap: () {
+                            if (widget.amIhost) {
+                              DatePicker.showDateTimePicker(
+                                context,
+                                minTime: DateTime.now(),
+                                maxTime: DateTime(2030, 12, 31),
+                                onConfirm: (date) {
+                                  widget.setEndTime(date);
+                                },
+                              );
+                            }
+                          },
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * .27,
+                            child: TextField(
+                              enabled: false,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                              controller: TextEditingController(
+                                text:
+                                    widget.endTime.toString().substring(0, 19),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

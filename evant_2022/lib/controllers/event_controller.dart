@@ -1,5 +1,4 @@
 import 'package:evant_2022/controllers/user_controller.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -159,8 +158,13 @@ class EventController extends GetxController {
     }
   }
 
-  Future updateEvent(eventId, title, description, category, max, status) async {
+  Future updateEvent(eventId, title, description, category, max, status,
+      startTime, endTime) async {
     bool result = false;
+    Map newTime = {
+      'start': startTime,
+      'end': endTime,
+    };
     await firestore.collection('events').doc(eventId).update(
       {
         'title': title,
@@ -168,10 +172,11 @@ class EventController extends GetxController {
         'category': category,
         'max': max,
         'status': status,
+        'time': newTime,
       },
     ).then((value) {
       result = true;
     });
-    return result; 
+    return result;
   }
 }
