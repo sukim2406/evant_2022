@@ -4,10 +4,10 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../../widgets/responsive_layout_widget.dart';
 
 import '../../controllers/global_controller.dart' as global;
+import '../../controllers/user_controller.dart';
 
 import '../../widgets/event_detail_page/event_map_widget.dart';
 import '../../widgets/event_detail_page/attendance_widget.dart';
-import '../../widgets/boxed_textfield_widget.dart';
 
 class EventDetailsWidget extends StatefulWidget {
   final bool amIhost;
@@ -116,6 +116,14 @@ class EventDetailsMobileWidget extends StatefulWidget {
 }
 
 class _EventDetailsMobileWidgetState extends State<EventDetailsMobileWidget> {
+  getHostScreenName(uid) async {
+    String screenName = '';
+    screenName =
+        await UserController.instance.getScreenName(widget.eventData['host']);
+
+    return screenName;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -181,6 +189,72 @@ class _EventDetailsMobileWidgetState extends State<EventDetailsMobileWidget> {
                       ),
                       controller: widget.titleController,
                     ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .02,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .9,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .6,
+                    child: const Text(
+                      'Host',
+                      style: TextStyle(
+                        color: global.secondaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .01,
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .6,
+                    child: FutureBuilder<String>(
+                        future: UserController.instance.getScreenName(
+                          widget.eventData['host'],
+                        ),
+                        builder: (BuildContext futureContext,
+                            AsyncSnapshot<String> snapshot) {
+                          Widget child;
+                          if (snapshot.hasData) {
+                            child = TextField(
+                              enabled: false,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                              controller: TextEditingController(
+                                text: snapshot.data,
+                              ),
+                            );
+                          } else {
+                            child = TextField(
+                              enabled: false,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                              controller: TextEditingController(
+                                text: 'Error',
+                              ),
+                            );
+                          }
+                          return child;
+                        }),
+                    // TextField(
+                    //   enabled: false,
+                    //   decoration: const InputDecoration(
+                    //     border: OutlineInputBorder(),
+                    //   ),
+                    //   controller: TextEditingController(
+                    //     text: getHostScreenName(widget.eventData['host']),
+                    //   ),
+                    // ),
                   ),
                 ],
               ),
