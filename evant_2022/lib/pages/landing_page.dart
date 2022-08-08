@@ -9,6 +9,7 @@ import '../widgets/landing_page/search_category_widget.dart';
 import '../widgets/landing_page/search_following_widget.dart';
 import '../widgets/landing_page/footer_widget.dart';
 import '../widgets/landing_page/my_events_widget.dart';
+import '../widgets/landing_page/search_keyword_widget.dart';
 
 import '../controllers/global_controller.dart' as global;
 import '../controllers/sf_controller.dart';
@@ -118,6 +119,10 @@ class __LandingMobilePageState extends State<_LandingMobilePage> {
                     MapScreenWidget(
                       userDoc: widget.userData,
                     ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .05,
+                    ),
+                    SearchKeywordWidget(userDoc: widget.userData),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .05,
                     ),
