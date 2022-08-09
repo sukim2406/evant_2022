@@ -69,6 +69,24 @@ class _SearchKeywordMobileWidgetState extends State<SearchKeywordMobileWidget> {
             ),
           ),
         ),
+        Container(
+          height: MediaQuery.of(context).size.height * .1,
+          width: MediaQuery.of(context).size.width * .9,
+          color: Colors.red,
+          child: TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              filled: true,
+              hintText: 'Search event or people',
+              hintStyle: const TextStyle(
+                color: global.primaryColor,
+              ),
+              fillColor: global.secondaryColor,
+            ),
+          ),
+        ),
       ],
     );
   }
