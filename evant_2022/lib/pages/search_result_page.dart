@@ -5,6 +5,8 @@ import '../widgets/landing_page/app_bar_widget.dart';
 import '../widgets/search_result_page/search_result_title_widget.dart';
 import '../widgets/search_result_page/result_list_widget.dart';
 
+import '../controllers/event_controller.dart';
+
 class SearchResultPage extends StatefulWidget {
   final Map userDoc;
   final String keyword;
@@ -19,6 +21,13 @@ class SearchResultPage extends StatefulWidget {
 }
 
 class _SearchResultPageState extends State<SearchResultPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    EventController.instance.searchEvent(widget.keyword);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayoutWidget(

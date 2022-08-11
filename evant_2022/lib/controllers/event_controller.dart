@@ -179,4 +179,17 @@ class EventController extends GetxController {
     });
     return result;
   }
+
+  Future searchEvent(keyword) async {
+    List searchResult = [];
+
+    await firestore
+        .collection('events')
+        .where('title', isGreaterThanOrEqualTo: keyword)
+        .where('title', isLessThanOrEqualTo: keyword + '\uf8ff')
+        .get()
+        .then((QuerySnapshot qs) {
+      print('result = ${qs.docs.first.data()}');
+    });
+  }
 }
