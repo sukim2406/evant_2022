@@ -1,7 +1,6 @@
 import 'package:evant_2022/controllers/user_controller.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'dart:math';
 
 class EventController extends GetxController {
@@ -180,16 +179,85 @@ class EventController extends GetxController {
     return result;
   }
 
-  Future searchEvent(keyword) async {
+  Future searchEvent(String keyword) async {
     List searchResult = [];
-
     await firestore
         .collection('events')
         .where('title', isGreaterThanOrEqualTo: keyword)
         .where('title', isLessThanOrEqualTo: keyword + '\uf8ff')
         .get()
+        .then(
+      (QuerySnapshot qs) {
+        qs.docs.forEach(
+          (element) {
+            if (searchResult.isEmpty) {
+              searchResult.add(element.data());
+            } else {
+              for (var map in searchResult) {
+                if (map['id'] != element['id']) {
+                  searchResult.add(element.data());
+                }
+              }
+            }
+          },
+        );
+      },
+    );
+    await firestore
+        .collection('events')
+        .where('description', isGreaterThanOrEqualTo: keyword)
+        .where('description', isLessThanOrEqualTo: keyword + '\uf8ff')
+        .get()
+        .then(
+      (QuerySnapshot qs) {
+        qs.docs.forEach(
+          (element) {
+            if (searchResult.isEmpty) {
+              searchResult.add(element.data());
+            } else {
+              for (var map in searchResult) {
+                if (map['id'] != element['id']) {
+                  searchResult.add(element.data());
+                }
+              }
+            }
+          },
+        );
+      },
+    );
+
+    return searchResult;
+  }
+
+  Future searchEventByTitle(String keyword, List list) async {
+    await firestore
+        .collection('events')
+        .where('title', isGreaterThanOrEqualTo: keyword)
+        .where('title', isLessThanOrEqualTo: keyword + '\uf8ff')
+        .get()
+        .then(
+      (QuerySnapshot qs) {
+        qs.docs.forEach((element) {
+          if (!list.contains(element)) {
+            list.add(element.data());
+          }
+        });
+      },
+    );
+  }
+
+  Future searchEventByDescription(String keyword, List list) async {
+    await firestore
+        .collection('events')
+        .where('description', isGreaterThanOrEqualTo: keyword)
+        .where('description', isLessThanOrEqualTo: keyword + '\uf8ff')
+        .get()
         .then((QuerySnapshot qs) {
-      print('result = ${qs.docs.first.data()}');
+      qs.docs.forEach((element) {
+        if (!list.contains(element)) {
+          list.add(element.data());
+        }
+      });
     });
   }
 }

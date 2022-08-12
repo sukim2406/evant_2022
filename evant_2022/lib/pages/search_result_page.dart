@@ -21,11 +21,17 @@ class SearchResultPage extends StatefulWidget {
 }
 
 class _SearchResultPageState extends State<SearchResultPage> {
+  List eventSearchList = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    EventController.instance.searchEvent(widget.keyword);
+    EventController.instance.searchEvent(widget.keyword).then((result) {
+      print(result);
+      setState(() {
+        eventSearchList = result;
+      });
+    });
   }
 
   @override
