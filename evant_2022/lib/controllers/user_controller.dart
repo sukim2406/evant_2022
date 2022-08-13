@@ -244,4 +244,21 @@ class UserController extends GetxController {
       return result;
     }
   }
+
+  Future searchUser(String keyword) async {
+    List searchResult = [];
+    await firestore
+        .collection('users')
+        .where('screenName', isGreaterThanOrEqualTo: keyword)
+        .where('screenName', isLessThanOrEqualTo: keyword + '\uf8ff')
+        .get()
+        .then(
+      (QuerySnapshot qs) {
+        qs.docs.forEach((element) {
+          searchResult.add(element.data());
+        });
+      },
+    );
+    return searchResult;
+  }
 }

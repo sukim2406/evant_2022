@@ -1,3 +1,4 @@
+import 'package:evant_2022/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/responsive_layout_widget.dart';
@@ -22,14 +23,20 @@ class SearchResultPage extends StatefulWidget {
 
 class _SearchResultPageState extends State<SearchResultPage> {
   List eventSearchList = [];
+  List userSearchList = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     EventController.instance.searchEvent(widget.keyword).then((result) {
-      print(result);
       setState(() {
         eventSearchList = result;
+      });
+    });
+    UserController.instance.searchUser(widget.keyword).then((result) {
+      setState(() {
+        print(result);
+        userSearchList = result;
       });
     });
   }
@@ -40,6 +47,8 @@ class _SearchResultPageState extends State<SearchResultPage> {
         mobileVer: SearchResultMobilePage(
       userDoc: widget.userDoc,
       keyword: widget.keyword,
+      eventList: eventSearchList,
+      userList: userSearchList,
     ));
   }
 }
@@ -47,12 +56,16 @@ class _SearchResultPageState extends State<SearchResultPage> {
 // ----------------------------- MOBILE -------------------------- //
 
 class SearchResultMobilePage extends StatefulWidget {
+  final List eventList;
+  final List userList;
   final String keyword;
   final Map userDoc;
   const SearchResultMobilePage({
     Key? key,
     required this.keyword,
     required this.userDoc,
+    required this.eventList,
+    required this.userList,
   }) : super(key: key);
 
   @override
@@ -75,7 +88,10 @@ class _SearchResultMobilePageState extends State<SearchResultMobilePage> {
             SearchResultTitleWidget(
               keyword: widget.keyword,
             ),
-            ResultListWidget(),
+            ResultListWidget(
+              eventList: widget.eventList,
+              userList: widget.userList,
+            ),
           ],
         ),
       ),
