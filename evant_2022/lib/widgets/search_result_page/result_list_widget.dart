@@ -57,8 +57,13 @@ class _ResultListMobileWidgetState extends State<ResultListMobileWidget> {
             itemCount: widget.eventList.length,
             itemBuilder: (BuildContext eventContext, int index) {
               return ListTile(
-                leading: Text(widget.eventList[index]['title']),
-                title: Text(widget.eventList[index]['description']),
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    widget.eventList[index]['eventImage'],
+                  ),
+                ),
+                title: Text(widget.eventList[index]['title']),
+                trailing: Text(widget.eventList[index]['description']),
               );
             },
           ),
