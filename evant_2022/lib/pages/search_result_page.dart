@@ -91,6 +91,7 @@ class _SearchResultMobilePageState extends State<SearchResultMobilePage> {
             ResultListWidget(
               eventList: widget.eventList,
               userList: widget.userList,
+              userData: widget.userDoc,
             ),
           ],
         ),

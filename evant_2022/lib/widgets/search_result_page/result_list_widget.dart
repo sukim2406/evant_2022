@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/responsive_layout_widget.dart';
 
+import '../../pages/event_detail_page.dart';
+
 class ResultListWidget extends StatefulWidget {
+  final Map userData;
   final List eventList;
   final List userList;
   const ResultListWidget({
     Key? key,
     required this.eventList,
     required this.userList,
+    required this.userData,
   }) : super(key: key);
 
   @override
@@ -22,6 +26,7 @@ class _ResultListWidgetState extends State<ResultListWidget> {
       mobileVer: ResultListMobileWidget(
         eventList: widget.eventList,
         userList: widget.userList,
+        userData: widget.userData,
       ),
     );
   }
@@ -30,12 +35,14 @@ class _ResultListWidgetState extends State<ResultListWidget> {
 // ------------------------- MOBILE ------------------------- //
 
 class ResultListMobileWidget extends StatefulWidget {
+  final Map userData;
   final List eventList;
   final List userList;
   const ResultListMobileWidget({
     Key? key,
     required this.eventList,
     required this.userList,
+    required this.userData,
   }) : super(key: key);
 
   @override
@@ -56,14 +63,27 @@ class _ResultListMobileWidgetState extends State<ResultListMobileWidget> {
             shrinkWrap: true,
             itemCount: widget.eventList.length,
             itemBuilder: (BuildContext eventContext, int index) {
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    widget.eventList[index]['eventImage'],
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EventDetailPage(
+                        userDoc: widget.userData,
+                        eventData: widget.eventList[index],
+                      ),
+                    ),
+                  );
+                },
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      widget.eventList[index]['eventImage'],
+                    ),
                   ),
+                  title: Text(widget.eventList[index]['title']),
+                  trailing: Text(widget.eventList[index]['description']),
                 ),
-                title: Text(widget.eventList[index]['title']),
-                trailing: Text(widget.eventList[index]['description']),
               );
             },
           ),
