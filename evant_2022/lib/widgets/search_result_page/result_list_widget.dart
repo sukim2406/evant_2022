@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/responsive_layout_widget.dart';
 
 import '../../pages/event_detail_page.dart';
+import '../../pages/profile_page.dart';
 
 class ResultListWidget extends StatefulWidget {
   final Map userData;
@@ -92,13 +93,25 @@ class _ResultListMobileWidgetState extends State<ResultListMobileWidget> {
             shrinkWrap: true,
             itemCount: widget.userList.length,
             itemBuilder: (BuildContext userContext, int index) {
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    widget.userList[index]['profilePicture'],
+              return GestureDetector(
+                onTap: () {
+                  if (widget.userList[index]['uid'] == widget.userData['uid']) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfilePage(),
+                      ),
+                    );
+                  }
+                },
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      widget.userList[index]['profilePicture'],
+                    ),
                   ),
+                  title: Text(widget.userList[index]['screenName']),
                 ),
-                title: Text(widget.userList[index]['screenName']),
               );
             },
           ),
