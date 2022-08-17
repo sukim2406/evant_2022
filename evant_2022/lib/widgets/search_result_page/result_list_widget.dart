@@ -4,6 +4,7 @@ import '../../widgets/responsive_layout_widget.dart';
 
 import '../../pages/event_detail_page.dart';
 import '../../pages/profile_page.dart';
+import '../../pages/user_page.dart';
 
 class ResultListWidget extends StatefulWidget {
   final Map userData;
@@ -100,6 +101,16 @@ class _ResultListMobileWidgetState extends State<ResultListMobileWidget> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ProfilePage(),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserPage(
+                          uid: widget.userList[index]['uid'],
+                          myUserDoc: widget.userData,
+                        ),
                       ),
                     );
                   }
