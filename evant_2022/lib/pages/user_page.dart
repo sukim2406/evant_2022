@@ -5,6 +5,7 @@ import '../controllers/user_controller.dart';
 import '../widgets/loading_widget.dart';
 import '../widgets/responsive_layout_widget.dart';
 import '../widgets/landing_page/app_bar_widget.dart';
+import '../widgets/user_page/user_tab_bar_widget.dart';
 
 class UserPage extends StatefulWidget {
   final Map myUserDoc;
@@ -107,7 +108,15 @@ class _UserMobilePageState extends State<UserMobilePage> {
               height: MediaQuery.of(context).size.height * .8,
               width: MediaQuery.of(context).size.width * .9,
               color: Colors.grey,
-              child: Column(),
+              child: Column(
+                children: [
+                  UserTabBarWidget(
+                    index: widget.index,
+                    updatePage: widget.updatePage,
+                  ),
+                  widget.pages[widget.index],
+                ],
+              ),
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * .05,
