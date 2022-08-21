@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../widgets/responsive_layout_widget.dart';
+import '../../widgets/rounded_btn_widget.dart';
 
 import '../../controllers/global_controller.dart' as global;
 
@@ -65,6 +66,19 @@ class _UserInfoMobileWidgetState extends State<UserInfoMobileWidget> {
               fit: BoxFit.contain,
             ).image,
           ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .01,
+          ),
+          RoundedBtnWidget(
+            height: null,
+            width: null,
+            func: () {
+              print('hi');
+            },
+            label: 'Follow',
+            btnColor: global.primaryColor,
+            txtColor: Colors.black,
+          )
         ],
       ),
     );
