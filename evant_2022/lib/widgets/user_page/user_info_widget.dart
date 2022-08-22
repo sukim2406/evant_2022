@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/responsive_layout_widget.dart';
 import '../../widgets/rounded_btn_widget.dart';
+import '../../widgets/boxed_textfield_widget.dart';
 
 import '../../controllers/global_controller.dart' as global;
 
@@ -58,6 +59,9 @@ class _UserInfoMobileWidgetState extends State<UserInfoMobileWidget> {
       ),
       child: Column(
         children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .05,
+          ),
           CircleAvatar(
             radius: MediaQuery.of(context).size.height * .1,
             backgroundColor: global.secondaryColor,
@@ -69,6 +73,19 @@ class _UserInfoMobileWidgetState extends State<UserInfoMobileWidget> {
           SizedBox(
             height: MediaQuery.of(context).size.height * .01,
           ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .08,
+            width: MediaQuery.of(context).size.width * .4,
+            child: FittedBox(
+              fit: BoxFit.fitHeight,
+              child: Text(
+                widget.userDoc['screenName'],
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
           RoundedBtnWidget(
             height: null,
             width: null,
@@ -78,7 +95,19 @@ class _UserInfoMobileWidgetState extends State<UserInfoMobileWidget> {
             label: 'Follow',
             btnColor: global.primaryColor,
             txtColor: Colors.black,
-          )
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .05,
+          ),
+          BoxedTextFieldWidget(
+            hintText: 'Greet Message',
+            width: MediaQuery.of(context).size.width * .7,
+            controller: TextEditingController(text: widget.userDoc['greetMsg']),
+            obsecure: false,
+            focusNode: FocusNode(),
+            enabled: false,
+            multiline: true,
+          ),
         ],
       ),
     );
