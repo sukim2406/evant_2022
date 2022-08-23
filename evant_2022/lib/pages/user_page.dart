@@ -51,7 +51,10 @@ class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      UserInfoWidget(userDoc: userDoc),
+      UserInfoWidget(
+        userDoc: userDoc,
+        myUserDoc: widget.myUserDoc,
+      ),
       const Text('area'),
       const Text('following/er'),
       const Text('events'),

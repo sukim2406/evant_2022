@@ -5,11 +5,14 @@ import '../../widgets/rounded_btn_widget.dart';
 import '../../widgets/boxed_textfield_widget.dart';
 
 import '../../controllers/global_controller.dart' as global;
+import '../../controllers/user_controller.dart';
 
 class UserInfoWidget extends StatefulWidget {
+  final Map myUserDoc;
   final Map userDoc;
   const UserInfoWidget({
     Key? key,
+    required this.myUserDoc,
     required this.userDoc,
   }) : super(key: key);
 
@@ -18,11 +21,25 @@ class UserInfoWidget extends StatefulWidget {
 }
 
 class _UserInfoWidgetState extends State<UserInfoWidget> {
+  bool following = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.myUserDoc['following'].contains(widget.userDoc['uid'])) {
+      setState(() {
+        following = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayoutWidget(
         mobileVer: UserInfoMobileWidget(
       userDoc: widget.userDoc,
+      following: following,
+      myUserDoc: widget.myUserDoc,
     ));
   }
 }
@@ -30,10 +47,14 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
 // ------------------------- MOBILE ----------------------------- //
 
 class UserInfoMobileWidget extends StatefulWidget {
+  final Map myUserDoc;
+  final bool following;
   final Map userDoc;
   const UserInfoMobileWidget({
     Key? key,
     required this.userDoc,
+    required this.following,
+    required this.myUserDoc,
   }) : super(key: key);
 
   @override
@@ -90,10 +111,15 @@ class _UserInfoMobileWidgetState extends State<UserInfoMobileWidget> {
             height: null,
             width: null,
             func: () {
-              print('hi');
+              UserController.instance.followUser(
+                widget.myUserDoc['uid'],
+                widget.userDoc['uid'],
+              );
             },
-            label: 'Follow',
-            btnColor: global.primaryColor,
+            label: (widget.following) ? 'Unfollow' : 'Follow',
+            btnColor: (widget.following)
+                ? global.secondaryColor
+                : global.primaryColor,
             txtColor: Colors.black,
           ),
           SizedBox(

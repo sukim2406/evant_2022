@@ -261,4 +261,15 @@ class UserController extends GetxController {
     );
     return searchResult;
   }
+
+  Future followUser(String myUid, String targetUid) async {
+    await firestore
+        .collection('users')
+        .doc(myUid)
+        .get()
+        .then((DocumentSnapshot ds) {
+      Map doc = ds.data() as Map;
+      if (doc['following'].contains(targetUid)) {}
+    });
+  }
 }
