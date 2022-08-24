@@ -262,7 +262,10 @@ class UserController extends GetxController {
     return searchResult;
   }
 
-  Future followUser(String myUid, String targetUid) async {
+  Future followUser(
+    String myUid,
+    String targetUid,
+  ) async {
     await firestore
         .collection('users')
         .doc(myUid)
@@ -271,5 +274,30 @@ class UserController extends GetxController {
       Map doc = ds.data() as Map;
       if (doc['following'].contains(targetUid)) {}
     });
+  }
+
+  Future updateFollowingList(
+    String myUid,
+    String targetUid,
+    bool following,
+  ) async {
+    await firestore.collection('users').doc(myUid).get().then(
+      (DocumentSnapshot ds) async {
+        Map tempMap = ds.data() as Map;
+        List tempList = tempMap['following'];
+        if (following) {
+          tempList.remove(targetUid);
+        } else {
+          tempList.add(targetUid);
+        }
+        print(tempList);
+        await firestore.collection('users').doc(myUid).update(
+          {'following': tempList},
+        ).then((result) {
+          return true;
+        });
+        return true;
+      },
+    );
   }
 }

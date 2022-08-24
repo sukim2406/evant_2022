@@ -111,10 +111,15 @@ class _UserInfoMobileWidgetState extends State<UserInfoMobileWidget> {
             height: null,
             width: null,
             func: () {
-              UserController.instance.followUser(
+              UserController.instance
+                  .updateFollowingList(
                 widget.myUserDoc['uid'],
                 widget.userDoc['uid'],
-              );
+                widget.following,
+              )
+                  .then((result) {
+                print('hi');
+              });
             },
             label: (widget.following) ? 'Unfollow' : 'Follow',
             btnColor: (widget.following)
