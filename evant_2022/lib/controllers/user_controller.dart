@@ -201,6 +201,22 @@ class UserController extends GetxController {
     }
   }
 
+  Future<List> getFollowingList(uid) async {
+    List result = [];
+    try {
+      final Map userDoc = await getCurUser(uid);
+      if (userDoc.isEmpty) {
+        return result;
+      } else {
+        result = userDoc['following'];
+        return result;
+      }
+    } catch (e) {
+      print('getFollowingList error : $e');
+      return result;
+    }
+  }
+
   Future closeEvent(eventId, uid) async {
     bool result = false;
     await updateClosedEvent(uid, eventId).then((updateClosedEventResult) {

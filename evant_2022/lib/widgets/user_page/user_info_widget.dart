@@ -26,11 +26,32 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.myUserDoc['following'].contains(widget.userDoc['uid'])) {
-      setState(() {
-        following = true;
-      });
-    }
+    // if (widget.myUserDoc['following'].contains(widget.userDoc['uid'])) {
+    //   setState(() {
+    //     following = true;
+    //   });
+    // }
+    checkFollowing();
+  }
+
+  void checkFollowing() {
+    UserController.instance
+        .getFollowingList(widget.myUserDoc['uid'])
+        .then((result) {
+      if (result.contains(widget.userDoc['uid'])) {
+        setState(() {
+          following = true;
+        });
+      } else {
+        setState(() {
+          following = false;
+        });
+      }
+    });
+  }
+
+  void refreshPage() {
+    checkFollowing();
   }
 
   @override
@@ -40,6 +61,7 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
       userDoc: widget.userDoc,
       following: following,
       myUserDoc: widget.myUserDoc,
+      refreshPage: refreshPage,
     ));
   }
 }
@@ -50,11 +72,13 @@ class UserInfoMobileWidget extends StatefulWidget {
   final Map myUserDoc;
   final bool following;
   final Map userDoc;
+  final VoidCallback refreshPage;
   const UserInfoMobileWidget({
     Key? key,
     required this.userDoc,
     required this.following,
     required this.myUserDoc,
+    required this.refreshPage,
   }) : super(key: key);
 
   @override
@@ -119,6 +143,7 @@ class _UserInfoMobileWidgetState extends State<UserInfoMobileWidget> {
               )
                   .then((result) {
                 print('hi');
+                widget.refreshPage();
               });
             },
             label: (widget.following) ? 'Unfollow' : 'Follow',
