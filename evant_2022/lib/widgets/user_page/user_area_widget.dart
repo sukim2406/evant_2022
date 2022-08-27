@@ -9,10 +9,12 @@ import '../../widgets/responsive_layout_widget.dart';
 import '../../controllers/global_controller.dart' as global;
 
 class UserAreaWidget extends StatefulWidget {
+  final Map myUserDoc;
   final Map userDoc;
   const UserAreaWidget({
     Key? key,
     required this.userDoc,
+    required this.myUserDoc,
   }) : super(key: key);
 
   @override
@@ -36,6 +38,15 @@ class _UserAreaWidgetState extends State<UserAreaWidget> {
     setState(() {
       markers[markerId] = marker;
     });
+  }
+
+  bool amIfollowing() {
+    print(widget.myUserDoc['following']);
+    if (widget.myUserDoc['following'].contains(widget.userDoc['uid'])) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
@@ -65,6 +76,7 @@ class _UserAreaWidgetState extends State<UserAreaWidget> {
         initialCameraPosition: initCameraPosition,
         controller: controller,
         markers: markers,
+        following: amIfollowing(),
       ),
     );
   }
@@ -73,6 +85,7 @@ class _UserAreaWidgetState extends State<UserAreaWidget> {
 // ----------------------- MOBILE -------------------- //
 
 class UserAreaMobileWidget extends StatefulWidget {
+  final bool following;
   final Completer<GoogleMapController> controller;
   final CameraPosition initialCameraPosition;
   final Map<MarkerId, Marker> markers;
@@ -81,6 +94,7 @@ class UserAreaMobileWidget extends StatefulWidget {
     required this.initialCameraPosition,
     required this.controller,
     required this.markers,
+    required this.following,
   }) : super(key: key);
 
   @override
@@ -109,14 +123,16 @@ class _UserAreaMobileWidgetState extends State<UserAreaMobileWidget> {
           SizedBox(
             height: MediaQuery.of(context).size.height * .65,
             width: MediaQuery.of(context).size.width * .85,
-            child: GoogleMap(
-              initialCameraPosition: widget.initialCameraPosition,
-              zoomControlsEnabled: false,
-              onMapCreated: (GoogleMapController controller) {
-                widget.controller.complete(controller);
-              },
-              markers: Set<Marker>.of(widget.markers.values),
-            ),
+            child: (widget.following)
+                ? GoogleMap(
+                    initialCameraPosition: widget.initialCameraPosition,
+                    zoomControlsEnabled: false,
+                    onMapCreated: (GoogleMapController controller) {
+                      widget.controller.complete(controller);
+                    },
+                    markers: Set<Marker>.of(widget.markers.values),
+                  )
+                : Text('Must be following this user to see area'),
           )
         ],
       ),

@@ -58,6 +58,7 @@ class _UserPageState extends State<UserPage> {
       ),
       UserAreaWidget(
         userDoc: userDoc,
+        myUserDoc: widget.myUserDoc,
       ),
       const Text('following/er'),
       const Text('events'),
