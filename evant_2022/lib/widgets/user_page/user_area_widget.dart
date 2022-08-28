@@ -132,7 +132,13 @@ class _UserAreaMobileWidgetState extends State<UserAreaMobileWidget> {
                     },
                     markers: Set<Marker>.of(widget.markers.values),
                   )
-                : Text('Must be following this user to see area'),
+                : const Center(
+                    child: Text(
+                    'Must be following this user to see the area map',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  )),
           )
         ],
       ),
