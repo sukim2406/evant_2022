@@ -8,6 +8,7 @@ import '../widgets/landing_page/app_bar_widget.dart';
 import '../widgets/user_page/user_tab_bar_widget.dart';
 import '../widgets/user_page/user_info_widget.dart';
 import '../widgets/user_page/user_area_widget.dart';
+import '../widgets/user_page/user_follow_widget.dart';
 
 class UserPage extends StatefulWidget {
   final Map myUserDoc;
@@ -60,7 +61,7 @@ class _UserPageState extends State<UserPage> {
         userDoc: userDoc,
         myUserDoc: widget.myUserDoc,
       ),
-      const Text('following/er'),
+      UserFollowWidget(),
       const Text('events'),
     ];
 
