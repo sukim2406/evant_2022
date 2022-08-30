@@ -44,6 +44,21 @@ class _UserFollowMobileWidgetState extends State<UserFollowMobileWidget> {
           bottomRight: Radius.circular(20),
         ),
       ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height * .35,
+            width: MediaQuery.of(context).size.width * .9,
+            color: Colors.red,
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height * .35,
+            width: MediaQuery.of(context).size.width * .9,
+            color: Colors.blue,
+          ),
+        ],
+      ),
     );
   }
 }
